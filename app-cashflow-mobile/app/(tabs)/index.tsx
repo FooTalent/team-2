@@ -12,11 +12,14 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { Feather } from "@expo/vector-icons";
+import { Feather, Octicons } from "@expo/vector-icons";
 import { PieChart } from "react-native-gifted-charts";
 import GradientChartHome from "@/components/Home/GradientChartHome";
+import { Link } from "expo-router";
 
 export default function HomeScreen() {
+  {/* <SimpleLineIcons name="home" size={24} color="black" /> */}
+ 
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -54,7 +57,7 @@ export default function HomeScreen() {
         <HelloWave />
       </ThemedView>
       <ThemedView>
-        <GradientChartHome />
+        {/* <GradientChartHome /> */}
       </ThemedView>
       <ThemedView className="gap-y-3">
         <TouchableOpacity>
@@ -126,6 +129,7 @@ export default function HomeScreen() {
               </View>
             </LinearGradient>
           </TouchableOpacity>
+          <Link asChild href={"addMovement"}>
           <TouchableOpacity
             style={{
               width: "27%",
@@ -166,6 +170,7 @@ export default function HomeScreen() {
               </LinearGradient>
             </View>
           </TouchableOpacity>
+          </Link>
         </View>
       </ThemedView>
     </ParallaxScrollView>
