@@ -5,8 +5,9 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  StyleSheet,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   DarkTheme,
   DefaultTheme,
@@ -14,13 +15,22 @@ import {
 } from "@react-navigation/native";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedView } from "@/components/ThemedView";
-import { HelloWave } from "@/components/HelloWave";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
+import dayjs from "dayjs";
+import BottomSheet from "@gorhom/bottom-sheet";
+import { BottomSheetView } from "@gorhom/bottom-sheet";
 
 export default function AddMoney() {
   const [option, setOption] = useState<Boolean>(false);
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ["25%", "50%", "70%"], []);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
   const colorScheme = useColorScheme();
   const categories = [
     {
@@ -46,21 +56,7 @@ export default function AddMoney() {
     }
   };
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/partial-react-logo.png")}
-          style={{
-            height: 178,
-            width: 290,
-            bottom: 0,
-            left: 0,
-            position: "absolute",
-          }}
-        />
-      }
-    >
+    <View style={{ flex: 1 }}>
       <ThemedView className="flex flex-row">
         <TouchableOpacity onPress={handleGoBack}>
           <MaterialIcons
@@ -129,26 +125,103 @@ export default function AddMoney() {
           <Text className="text-headxl text-neutralWhite">
             Origen del ingreso
           </Text>
-          {categories.map((category, index) => (
-            <View key={category.id}>
-              <TouchableOpacity className="flex flex-row justify-between items-center bg-primaryLightGreen  py-[16px]">
-                <Feather
-                  name="plus-circle"
-                  size={24}
-                  color="#3B1575"
-                />
-              </TouchableOpacity>
-              <Text className="text-headxl text-neutralWhite">
-                {category.name}
+          <View className="flex w-full flex-row ">
+            {categories.map((category, index) => (
+              <View
+                key={category.id}
+                className="w-[80px]  flex-col items-center"
+              >
+                <TouchableOpacity
+                  style={{
+                    paddingVertical: 4,
+                    paddingHorizontal: 20,
+                    marginVertical: 15,
+                    borderRadius: 40,
+                    backgroundColor: "#abfebd",
+                  }}
+                >
+                  <Feather name="plus-circle" size={24} color="#ff00b8" />
+                </TouchableOpacity>
+                <Text className="text-headmd text-neutralWhite ml-2">
+                  {category.name}
+                </Text>
+              </View>
+            ))}
+          </View>
+          <Text className="text-headxl font-psemibold text-neutralWhite">
+            ¿Cuando se ingreso el dinero?
+          </Text>
+          <View className="flex flex-row  items-center justify-between">
+            <TouchableOpacity>
+              <MaterialIcons
+                name="arrow-forward"
+                size={24}
+                color="white"
+                className="rotate-180"
+              />
+            </TouchableOpacity>
+            <Text className="text-headxl font-psemibold text-neutralWhite">
+              {dayjs().format("d [de] MMMM, DDDD")}
+            </Text>
+            <TouchableOpacity>
+              <MaterialIcons name="arrow-forward" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity>
+            <LinearGradient
+              className="opacity-50 "
+              colors={["#FF00B8", "#04FD3B"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              style={{ borderRadius: 40 }}
+            >
+              <Text className="text-headxl text-neutralWhite text-center font-headsemibold py-[8px]  ">
+                IR AL CALENDARIO
               </Text>
-            </View>
-          ))}
+            </LinearGradient>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <LinearGradient
+              className="opacity-50 "
+              colors={["#FF00B8", "#04FD3B"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              style={{ borderRadius: 40 }}
+            >
+              <Text className="text-headxl text-neutralWhite text-center font-headsemibold py-[8px]  ">
+                GUARDAR
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
       ) : (
         <View>
           <Text className="text-headxl text-neutralWhite">Gastos</Text>
         </View>
       )}
-    </ParallaxScrollView>
+      <View style={styles.container}>
+        <BottomSheet
+          snapPoints={snapPoints}
+          ref={bottomSheetRef}
+          onChange={handleSheetChanges}
+        >
+          <BottomSheetView style={styles.contentContainer}>
+            <Text>Awesome 🎉</Text>
+          </BottomSheetView>
+        </BottomSheet>
+      </View>
+    </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: "grey",
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+});
