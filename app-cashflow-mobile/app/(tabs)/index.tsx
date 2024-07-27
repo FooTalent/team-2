@@ -16,6 +16,7 @@ import { Feather, Octicons } from "@expo/vector-icons";
 import { PieChart } from "react-native-gifted-charts";
 import GradientChartHome from "@/components/Home/GradientChartHome";
 import { Link } from "expo-router";
+import HomeChart from "@/components/Home/HomeChart/HomeChart";
 
 export default function HomeScreen() {
   {/* <SimpleLineIcons name="home" size={24} color="black" /> */}
@@ -57,7 +58,7 @@ export default function HomeScreen() {
         <HelloWave />
       </ThemedView>
       <ThemedView>
-        {/* <GradientChartHome /> */}
+        <HomeChart/>
       </ThemedView>
       <ThemedView className="gap-y-3">
         <TouchableOpacity>
