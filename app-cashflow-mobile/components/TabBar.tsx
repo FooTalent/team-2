@@ -16,8 +16,15 @@ export default function TabBar({ state, descriptors, navigation }: any) {
   };
   return (
     <View
-      className="bg-[#110622]  flex flex-row h-[84px] w-full"
-      style={{ borderRadius: 20 }}
+      className="bg-[#110622] border-[#ABFEBD] flex flex-row h-[84px]"
+      style={{
+        borderRadius: 40,
+        borderWidth: 1,
+        borderColor: "#ABFEBD",
+        width: "98%",
+        margin: "auto",
+      }}
+
       /* style={styles.tab} */
     >
       {state.routes.map((route: any, index: any) => {
@@ -59,25 +66,21 @@ export default function TabBar({ state, descriptors, navigation }: any) {
             testID={options.tabBarTestID}
             onPress={onPress}
             onLongPress={onLongPress}
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              backgroundColor: isFocused ? "#ABFEBD" : "#110622",
+              borderRadius: 40,
+              margin: 10,
+            }}
           >
-            {/* {label} */}
-            <View
-              className={`${
-                isFocused ? "rounded-full px-3 py-2 bg-neutralWhite" : ""
-              }  ${
-                route.name == "more"
-                  ? "border border-[#222] rounded-full p-3"
-                  : ""
-              }`}
-            >
+            <View>
               {icons[route.name]({
-                color: isFocused ? "black" : "#222",
-                size: 44,
-                borderRadius: isFocused ? 20 : 0,
-                border: isFocused ? "2px solid #673ab7" : "none",
+                color: isFocused ? "#110622" : "#ABFEBD",
+                marginHorizontal: "auto",
               })}
             </View>
+            <Text className="text-center" style={{color: isFocused ? "#110622": "#ABFEBD"}}>{label}</Text>
           </TouchableOpacity>
         );
       })}

@@ -22,6 +22,9 @@ export default function RootLayout() {
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="addMovement" options={{ headerShown: false }} />
+            <Stack.Screen name="miprofile" options={{ headerShown: false }} />
+            <Stack.Screen name="addBudget" options={{ headerShown: false }} />
+            <Stack.Screen name="budgets/[id]" options={{ headerShown: false }} />
             {/* <Stack.Screen name="+not-found" /> */}
           </Stack>
         </ThemeProvider>
