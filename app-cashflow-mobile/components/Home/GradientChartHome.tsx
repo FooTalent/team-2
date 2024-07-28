@@ -41,18 +41,18 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#000', // Fondo negro
+    backgroundColor: '#000',
     height: '100%',
   },
   amountText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff', // Texto blanco
+    color: '#fff',
     marginVertical: 10,
   },
   labelText: {
     fontSize: 16,
-    color: '#fff', // Texto blanco
+    color: '#fff',
     marginVertical: 5,
   },
 });

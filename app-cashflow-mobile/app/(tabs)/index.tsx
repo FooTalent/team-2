@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   Text,
+  Pressable,
 } from "react-native";
 
 import { HelloWave } from "@/components/HelloWave";
@@ -174,6 +175,15 @@ export default function HomeScreen() {
           </Link>
         </View>
       </ThemedView>
+
+
+      {/* ONBOARDING MOMENTANEO, NO DEBERIA IR AQUI */}
+      <View>
+        <Link href={`/onboarding`}>
+        <Text style={{backgroundColor: "#fff"}}>Onboarding</Text>
+        </Link>
+
+      </View>
     </ParallaxScrollView>
   );
 }
