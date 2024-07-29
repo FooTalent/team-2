@@ -6,6 +6,7 @@ import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import GeneralButton from "@/components/GeneralButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const More = () => {
   return (
@@ -156,7 +157,11 @@ const More = () => {
           marginHorizontal: "auto",
         }}
       >
-        <Text className="text-plg align-middle text-[#7AED70] uppercase  font-headsemibold">
+        <Text onPress={async () => 
+          {
+            router.replace('auth')
+            await AsyncStorage.removeItem('isLoggedIn');
+          }} className="text-plg align-middle text-[#7AED70] uppercase  font-headsemibold">
           Cerrar Sesion
         </Text>
         <View

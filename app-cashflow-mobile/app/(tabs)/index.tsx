@@ -175,13 +175,19 @@ export default function HomeScreen() {
       </ThemedView>
 
 
-      {/* ONBOARDING MOMENTANEO, NO DEBERIA IR AQUI */}
+      {/* ONBOARDING MOMENTANEO, NO DEBERIA IR AQUI
       <View>
         <Link href={`/onboarding`}>
         <Text style={{backgroundColor: "#fff"}}>Onboarding</Text>
         </Link>
 
       </View>
+      <View>
+        <Link href={`/auth`}>
+        <Text style={{backgroundColor: "#fff"}}>Auth</Text>
+        </Link>
+
+      </View> */}
     </ParallaxScrollView>
   );
 }
