@@ -184,6 +184,12 @@ export default function HomeScreen() {
         </Link>
 
       </View>
+      <View>
+        <Link href={`/auth`}>
+        <Text style={{backgroundColor: "#fff"}}>Auth</Text>
+        </Link>
+
+      </View>
     </ParallaxScrollView>
   );
 }
