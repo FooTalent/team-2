@@ -46,6 +46,7 @@ export const GradientPieChart = () => {
       <PieChart
         style={{ height: 250 }}
         data={data}
+        
         outerRadius={"90%"}
         innerRadius={"75%"}
         padAngle={-0.57}
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
   chartContain: {
     padding: 16,
     borderRadius: 8,
-    backgroundColor: "#000", // Color de fondo
+    backgroundColor: "#0A0219", // Color de fondo
   },
   titleContain: {
     color: "#FFFFFF",

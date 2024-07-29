@@ -72,8 +72,7 @@ export default function HomeScreen() {
               alignItems: "center",
               height: 74,
             }}
-            className="opacity-50 "
-            colors={["#FF00B8", "#04FD3B"]}
+            colors={["#0E4117", "#480C36"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
           >
@@ -107,8 +106,7 @@ export default function HomeScreen() {
                 alignItems: "center",
                 height: 75,
               }}
-              className="opacity-50"
-              colors={["#FF00B8", "#04FD3B"]}
+              colors={["#0E4117", "#480C36"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 0, y: 1 }}
             >

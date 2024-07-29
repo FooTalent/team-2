@@ -38,7 +38,6 @@ const Onboarding = () => {
       loop={false}
       style={{ backgroundColor: "#090215" }}
     >
-      {/* Primer slide */}
       <View style={styles.slide}>
         <Image
           source={require("@/assets/images/onboard-1.png")}
@@ -49,7 +48,6 @@ const Onboarding = () => {
           Organiza tu dinero, alcanza tus metas.
         </Text>
       </View>
-      {/* Segundo slide */}
       <View style={styles.slide}>
         <Image
           source={require("@/assets/images/onboard-2.png")}
@@ -60,7 +58,6 @@ const Onboarding = () => {
           Planifica tus gastos mensuales y anuales de forma personalizada.
         </Text>
       </View>
-      {/* Tercer slide */}
       <View style={styles.slide}>
         <MaskedView
           style={{
