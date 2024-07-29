@@ -14,6 +14,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Swiper from "react-native-swiper";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 
@@ -24,7 +25,10 @@ const Onboarding = () => {
   const router = useRouter();
 
   const completeOnboarding = async () => {
-    if (selectedValue != "" && budget != "") router.replace("(tabs)");
+    if (selectedValue != "" && budget != "") {
+      await AsyncStorage.setItem('onboardingComplete', 'true');
+      router.replace("(tabs)");
+    } 
     setMarkError(true)
     return;
   };
