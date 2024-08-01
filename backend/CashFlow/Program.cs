@@ -18,12 +18,14 @@ builder.Services.AddDbContext<AppDbContext>(options=> options.UseSqlServer("Serv
 
 //Repositories
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<MoneyRepository>();
 builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
 
 
 // Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
+builder.Services.AddScoped<IMoneyService, MoneyService>();
 
 
 //Mappers 

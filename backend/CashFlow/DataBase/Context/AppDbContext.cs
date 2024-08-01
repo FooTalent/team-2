@@ -27,12 +27,17 @@ namespace CashFlow.DataBase.Context
                 new Category { Name = "Impuestos" },
                 new Category { Name = "Cosmeticos" }
                 );
+
+            modelBuilder.Entity<Money>()
+                .HasIndex(u => u.UserId)
+                .IsUnique();
+
         }
 
 
         public DbSet<User> Users => Set<User>();
 
-        public DbSet<TotalMoney> TotalMoneys => Set<TotalMoney>();
+        public DbSet<Money> Moneys => Set<Money>();
 
         public DbSet<Budget> Budgets => Set<Budget>();
 
