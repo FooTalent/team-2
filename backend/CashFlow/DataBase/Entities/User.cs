@@ -13,7 +13,7 @@
 
         public string Password { get; set; } = string.Empty;
 
-        public TotalMoney TotalMoney { get; set; }
+        public Money TotalMoney { get; set; }
 
     }
 }

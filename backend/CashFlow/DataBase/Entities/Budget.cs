@@ -6,9 +6,9 @@
         public string Name { get; set; } = string.Empty;
         public decimal Amount { get; set; }
 
-        public int TotalMoneyId { get; set; }
+        public int MoneyId { get; set; }
 
-        public TotalMoney TotalMoney { get; set; }
+        public Money Money { get; set; }
 
         public DateTime CreatedDate { get; set; }
         public List<Expense> Expenses { get; set; } = new List<Expense>();

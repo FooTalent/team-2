@@ -1,6 +1,6 @@
 ﻿namespace CashFlow.DataBase.Entities
 {
-    public class TotalMoney
+    public class Money
     {
 
         public int Id { get; set; }
@@ -9,6 +9,7 @@
 
         public decimal Rest { get; set; }
 
+        
         public int UserId { get; set; }
         
         public User User { get; set; }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CashFlow.DataBase.Entities;
 using CashFlow.DTOs.Budget;
+using CashFlow.DTOs.TotalMoney;
 using CashFlow.DTOs.User;
 
 namespace CashFlow.Mappers
@@ -20,6 +21,9 @@ namespace CashFlow.Mappers
 
             CreateMap<BudgetCreateDto, Budget>().ReverseMap();
             CreateMap<BudgetGenericDto, Budget>().ReverseMap();
+
+            CreateMap<MoneyCreateDto, Money>().ReverseMap();
+            CreateMap<MoneyGenericDto, Money>().ReverseMap();
 
         }
     }

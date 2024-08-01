@@ -16,6 +16,7 @@ namespace CashFlow.Services
         public async Task<BudgetGenericDto> Create(BudgetCreateDto budgetDto)
         {
             Budget budget = _mapper.Map<Budget>(budgetDto);
+
             var response = await _budgetRepository.Create(budget);
 
             return  _mapper.Map<BudgetGenericDto>(response);
