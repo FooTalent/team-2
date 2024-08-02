@@ -14,4 +14,11 @@
 
         void Update(TEntity entity);
     }
+
+/*   public interface IBaseRepositoryDto<TEntity>:IBaseRepository<TEntity> where TEntity : class
+    {
+        
+        Task<Dto> Create<Dto>(TEntity entity);
+
+    }*/
 }

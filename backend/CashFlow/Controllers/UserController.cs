@@ -1,5 +1,6 @@
 ﻿using CashFlow.DTOs.User;
 using CashFlow.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CashFlow.Controllers
@@ -10,14 +11,25 @@ namespace CashFlow.Controllers
     {
         private readonly IUserService _userService = userService;
 
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+
+            var userResponse = await _userService.GetAll();
+
+            return userResponse == null ? new NotFoundResult() : new JsonResult(userResponse);
+        }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetUser(int Id) {
 
             var userResponse = await _userService.GetById(Id);
 
             return userResponse == null ?  new NotFoundResult() : new JsonResult(userResponse);
         }
+
+      
 
         [HttpPost("create")]
         [Consumes("application/json")]
@@ -26,6 +38,15 @@ namespace CashFlow.Controllers
             var userResponse = await _userService.Create(user);
 
             return  new JsonResult(userResponse);
+        }
+
+        [HttpPost("login")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> LoginUser([FromBody] AuthRequestDto userAuth)
+        {
+            var userResponse = await _userService.Login(userAuth);
+
+            return new JsonResult(userResponse);
         }
 
 
