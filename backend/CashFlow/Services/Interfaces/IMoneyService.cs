@@ -1,4 +1,5 @@
-﻿using CashFlow.DTOs.TotalMoney;
+﻿using CashFlow.DataBase.Entities;
+using CashFlow.DTOs.TotalMoney;
 using CashFlow.DTOs.User;
 
 namespace CashFlow.Services.Interfaces
@@ -9,6 +10,8 @@ namespace CashFlow.Services.Interfaces
         Task<MoneyGenericDto> Create(MoneyCreateDto moneyDto);
 
         Task<MoneyGenericDto?> GetById(int Id);
+
+        Task<Money?> GetByIdRelations(int Id);
 
         Task<MoneyGenericDto> Update(MoneyGenericDto moneyDto);
 

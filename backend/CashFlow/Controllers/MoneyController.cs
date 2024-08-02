@@ -14,7 +14,7 @@ namespace CashFlow.Controllers
         [HttpGet]
         public async Task<ActionResult<MoneyGenericDto>> GetMoneyById(int Id)
         {
-            var moneyResponse = await _moneyService.GetById(Id);
+            var moneyResponse = await _moneyService.GetByIdRelations(Id);
 
             if(moneyResponse == null)
             {
@@ -25,14 +25,15 @@ namespace CashFlow.Controllers
         }
 
 
-        [HttpPost("create")]
-        [Consumes("application/json")]
-        public async Task<ActionResult<MoneyGenericDto>> Create([FromBody] MoneyCreateDto moneyDto)
-        {
-            var moneyResponse = await _moneyService.Create(moneyDto);
 
-            return new JsonResult(moneyResponse);
-        }
+        /*     [HttpPost("create")]
+             [Consumes("application/json")]
+             public async Task<ActionResult<MoneyGenericDto>> Create([FromBody] MoneyCreateDto moneyDto)
+             {
+                 var moneyResponse = await _moneyService.Create(moneyDto);
+
+                 return new JsonResult(moneyResponse);
+             }*/
 
     }
 }

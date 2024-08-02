@@ -1,6 +1,8 @@
+using AutoMapper;
 using CashFlow.DataBase.Context;
 using CashFlow.DataBase.Repository;
 using CashFlow.DataBase.Repository.Interfaces;
+using CashFlow.Mappers;
 using CashFlow.Middleware;
 using CashFlow.Services;
 using CashFlow.Services.Interfaces;
@@ -26,6 +28,8 @@ builder.Services.AddDbContext<AppDbContext>(options=> options.UseSqlServer("Serv
 //Repositories
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<MoneyRepository>();
+builder.Services.AddScoped<ExpenseRepository>();
+builder.Services.AddScoped<IncomeRepository>();
 builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
 
 
@@ -33,11 +37,12 @@ builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
 builder.Services.AddScoped<IMoneyService, MoneyService>();
+builder.Services.AddScoped<IExpensesService,ExpenseService>();
+builder.Services.AddScoped<IIncomeService,IncomeService>();
 
 
 //Mappers 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
 
 
 // Cors
