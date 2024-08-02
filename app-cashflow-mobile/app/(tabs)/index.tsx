@@ -13,15 +13,18 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { Feather, Octicons } from "@expo/vector-icons";
+import { Feather, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { PieChart } from "react-native-gifted-charts";
 import GradientChartHome from "@/components/Home/GradientChartHome";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import HomeChart from "@/components/Home/HomeChart/HomeChart";
+import GeneralButton from "@/components/GeneralButton";
 
 export default function HomeScreen() {
-  {/* <SimpleLineIcons name="home" size={24} color="black" /> */}
- 
+  {
+    /* <SimpleLineIcons name="home" size={24} color="black" /> */
+  }
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -32,162 +35,128 @@ export default function HomeScreen() {
         />
       }
     >
-      <View className="flex  border-2">
-        <TouchableOpacity style={{ marginLeft: "auto" }}>
-          <Feather
-            className="p-3 font border border-neutralWhite rounded-full"
-            name="bell"
-            size={24}
-            color="white"
+      <ThemedView className="flex flex-row justify-between">
+        <View style={styles.titleContainer}>
+          <Image
+            style={{ width: 45.28, height: 45.28, borderRadius: 100 }}
+            source={{
+              uri: "https://reactnative.dev/img/tiny_logo.png",
+            }}
           />
-        </TouchableOpacity>
-      </View>
-      <ThemedView style={styles.titleContainer}>
-        <Text className=" font-headlight text-headxxl text-neutralWhite">
-          Hola
-        </Text>
-        <Image
-          style={{ width: 45.28, height: 45.28, borderRadius: 100 }}
-          source={{
-            uri: "https://reactnative.dev/img/tiny_logo.png",
-          }}
-        />
+          <Text className=" font-headlight text-headxxl text-neutralWhite">
+            Hola
+          </Text>
 
-        <Text className=" font-headsemibold text-headxxl text-neutralWhite">
-          Clara
-        </Text>
-        <HelloWave />
+          <Text className=" font-headsemibold text-headxxl text-neutralWhite">
+            Clara!
+          </Text>
+        </View>
+        <View className="flex bg-[#290B57] rounded-full border-2">
+          <TouchableOpacity style={{ marginLeft: "auto" }}>
+            <Feather
+              className="p-3 font  rounded-full"
+              name="bell"
+              size={24}
+              color="#954fff"
+            />
+          </TouchableOpacity>
+        </View>
+        {/* <HelloWave /> */}
       </ThemedView>
       <ThemedView>
-        <HomeChart/>
+        
+        <HomeChart />
       </ThemedView>
       <ThemedView className="gap-y-3">
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push("addMovement")}>
           <LinearGradient
             style={{
-              padding: 16,
-              borderRadius: 8,
+              paddingHorizontal: 23,
+              borderRadius: 40,
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
-              height: 74,
+              height: 44,
             }}
             colors={["#0E4117", "#480C36"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 1 }}
+            start={{
+              x: 0,
+              y: 0,
+            }}
+            end={{
+              x: 0,
+              y: 1,
+            }}
           >
-            <Text className="text-headxl text-neutralWhite font-headlight">
-              Ver Detalles
+            <Text className="text-headlg text-neutralWhite">
+              AGREGAR MOVIMIENTOS
             </Text>
-
             <View
+              className="justify-center"
               style={{
                 width: "auto",
                 height: 70,
               }}
             >
               <Feather
-                size={70}
-                className="rotate-90  "
+                size={24}
+                className=" rotate-180"
                 name="arrow-down-left"
                 color="white"
               />
             </View>
           </LinearGradient>
         </TouchableOpacity>
-        <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
-          <TouchableOpacity style={{ width: "70%" }}>
-            <LinearGradient
-              style={{
-                padding: 16,
-                borderRadius: 8,
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                height: 75,
-              }}
-              colors={["#0E4117", "#480C36"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 0, y: 1 }}
-            >
-              <Text className="text-headxl text-neutralWhite font-headlight">
-                Movimientos
-              </Text>
 
-              <View
-                style={{
-                  width: "auto",
-                  height: 70,
-                }}
-              >
-                <Feather
-                  size={70}
-                  className=" "
-                  name="arrow-down-left"
-                  color="white"
-                />
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
-          <Link asChild href={"addMovement"}>
-          <TouchableOpacity
+        <TouchableOpacity onPress={() => router.push("addMovement")}>
+          <LinearGradient
             style={{
-              width: "27%",
-              borderColor: "white",
-              borderWidth: 1,
-              borderRadius: 20,
+              paddingHorizontal: 23,
+              borderRadius: 40,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              height: 44,
+            }}
+            colors={["#0E4117", "#480C36"]}
+            start={{
+              x: 0,
+              y: 0,
+            }}
+            end={{
+              x: 0,
+              y: 1,
             }}
           >
-            <Text className="text-headmd text-center   text-neutralWhite font-headlight top-3">
-              Agregar Movimientos
-            </Text>
-
+            <Text className="text-headlg text-neutralWhite">VER DETALLES</Text>
             <View
+              className="justify-center"
               style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                top: 22,
+                width: "auto",
+                height: 70,
               }}
             >
-              <LinearGradient
-                style={{
-                  padding: 1,
-                  borderRadius: 100,
-                  maxWidth: 35,
-                }}
-                colors={["#FF00B8", "#04FD3B"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 0, y: 1 }}
-              >
-                <Feather
-                  className="text-center"
-                  size={25}
-                  name="plus"
-                  color="white"
-                />
-              </LinearGradient>
+              <Feather
+                size={24}
+                className=" "
+                name="arrow-down-left"
+                color="white"
+              />
             </View>
-          </TouchableOpacity>
-          </Link>
-        </View>
+          </LinearGradient>
+        </TouchableOpacity>
       </ThemedView>
 
-
-      {/* ONBOARDING MOMENTANEO, NO DEBERIA IR AQUI
       <View>
         <Link href={`/onboarding`}>
-        <Text style={{backgroundColor: "#fff"}}>Onboarding</Text>
+          <Text style={{ backgroundColor: "#fff" }}>Onboarding</Text>
         </Link>
-
       </View>
       <View>
         <Link href={`/auth`}>
-        <Text style={{backgroundColor: "#fff"}}>Auth</Text>
+          <Text style={{ backgroundColor: "#fff" }}>Auth</Text>
         </Link>
-
-      </View> */}
+      </View>
     </ParallaxScrollView>
   );
 }

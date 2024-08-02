@@ -13,10 +13,11 @@ const More = () => {
     <View
       style={{
         flex: 1,
-        marginHorizontal: 16,
+        paddingHorizontal: 16,
         paddingVertical: 40,
         flexDirection: "column",
         justifyContent: "space-between",
+        backgroundColor: "#090215",
       }}
     >
       <View style={{ gap: 10 }}>

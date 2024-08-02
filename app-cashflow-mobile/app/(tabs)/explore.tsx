@@ -1,27 +1,54 @@
-import { StyleSheet, Image, Platform, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Image,
+  Platform,
+  Text,
+  View,
+  Modal,
+  Pressable,
+  TouchableWithoutFeedback,
+} from "react-native";
 
 import { ThemedView } from "@/components/ThemedView";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import GeneralButton from "@/components/GeneralButton";
 export default function TabTwoScreen() {
+  const [modalVisible, setModalVisible] = useState(true);
+  const refModal = useRef<any>(null);
+
+  
+  const handleClickOutside = () => {
+    setModalVisible(false);
+  };
+
+  const [firstTime, setFirstTime] = useState<boolean>(false);
+  const budgets = [
+    "Presupuesto 1",
+    "Presupuesto 2",
+    "Presupuesto 3",
+    "Presupuesto 4",
+  ];
   return (
     <View
       style={{
         flex: 1,
-        marginHorizontal: 16,
+        paddingHorizontal: 16,
         paddingVertical: 40,
+        backgroundColor: "#090215",
       }}
     >
       <ThemedView className="flex flex-row justify-between">
         <View className="  flex flex-row gap-[16px]">
           <TouchableOpacity
-            style={{ backgroundColor: "#ABFEBD", borderRadius: 100 }}
+            style={{ backgroundColor: "#290B57", borderRadius: 100 }}
           >
             <MaterialIcons
               name="keyboard-arrow-left"
-              color="#3B1575"
+              color="#7d32ec"
               size={44}
               className="text-[24px]"
             />
@@ -30,41 +57,205 @@ export default function TabTwoScreen() {
             Presupuesto
           </Text>
         </View>
+        <TouchableOpacity onPress={() => router.push("addBudget")}>
+          <LinearGradient
+            style={{
+              borderRadius: 30,
+              padding: 2,
+            }}
+            colors={["#0E4117", "#490B37"]}
+            start={{ x: 1, y: 0 }}
+            end={{ x: 0, y: 0 }}
+          >
+            <View
+              className="bg-[#090215]"
+              style={{
+                borderRadius: 30,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: 10,
+              }}
+            >
+              <Text className="text-neutralWhite font-headbold text-headmd align-middle">
+                Añadir
+              </Text>
+              <AntDesign name="pluscircleo" size={24} color="white" />
+            </View>
+          </LinearGradient>
+        </TouchableOpacity>
       </ThemedView>
-      <Image
-        style={{
-          width: 254.82,
-          height: 254.82,
-          marginTop: 85,
-          marginHorizontal: 44,
-          marginBottom: 20,
-          margin: 10,
-        }}
-        source={require("../../assets/images/Group15.png")}
-      />
-      <Text className="font-psemibold text-headmd  text-neutralLightGray text-center">
-        Aún no añadiste ningún presupuesto
-      </Text>
-      <TouchableOpacity
-      onPress={()=>router.push("addBudget")}
-      style={{ marginHorizontal: "auto", marginTop: 40 }}>
-        <LinearGradient
-          style={{
-            borderRadius: 15,
-          }}
-          colors={["#0E4117", "#480C36"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-        >
-          <Feather
-            className="text-center text-[42px]  font-headlight"
-            style={{ padding: 9 }}
-            size={44}
-            name="plus"
-            color="white"
+      {firstTime ? (
+        <>
+          <Image
+            style={{
+              width: 254.82,
+              height: 254.82,
+              marginTop: 85,
+              marginHorizontal: 44,
+              marginBottom: 20,
+              margin: 10,
+            }}
+            source={require("../../assets/images/Group15.png")}
           />
-        </LinearGradient>
-      </TouchableOpacity>
+          <Text className="font-psemibold text-headmd  text-neutralLightGray text-center">
+            Aún no añadiste ningún presupuesto
+          </Text>
+          <TouchableOpacity
+            onPress={() => router.push("addBudget")}
+            style={{ marginHorizontal: "auto", marginTop: 40 }}
+          >
+            <LinearGradient
+              style={{
+                borderRadius: 15,
+              }}
+              colors={["#0E4117", "#480C36"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+            >
+              <Feather
+                className="text-center text-[42px]  font-headlight"
+                style={{ padding: 9 }}
+                size={44}
+                name="plus"
+                color="white"
+              />
+            </LinearGradient>
+          </TouchableOpacity>
+        </>
+      ) : (
+        budgets.map((budget, index) => (
+          <TouchableOpacity
+            onPress={() => router.push(`budgets/${index}`)}
+            style={{
+              paddingHorizontal: 10,
+              backgroundColor: "#290B57",
+              borderRadius: 9,
+              marginTop: 16,
+              flexDirection: "row",
+              alignItems: "center",
+              paddingTop: 10,
+            }}
+          >
+            <View style={{ width: "20%" }}>
+              <View className="bg-[#7d32ec] w-[50px] h-[50px] rounded-full flex items-center justify-center">
+                <Text className="text-neutralWhite text-headxxl ">
+                  {budget.slice(0, 1).toUpperCase()}
+                </Text>
+              </View>
+            </View>
+            <View style={{ width: "70%" }} className="w-[70%]">
+              <View className=" flex  flex-row justify-around">
+                <Text className="text-headlg   text-neutralWhite font-headsemibold">
+                  {budget}
+                </Text>
+                <Text
+                  className="text-headlg text-[#6EFF8E] font-headsemibold"
+                  style={{ marginLeft: "auto" }}
+                >
+                  $10
+                </Text>
+              </View>
+              <View style={styles.container}>
+                <View style={styles.barContainer}>
+                  <View
+                    style={[
+                      styles.bar,
+                      {
+                        width: `70%`,
+                      },
+                    ]}
+                  />
+                </View>
+              </View>
+            </View>
+            <MaterialIcons
+              name="arrow-back-ios"
+              size={24}
+              color="white"
+              className="rotate-180"
+            />
+          </TouchableOpacity>
+        ))
+      )}
+       <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        setModalVisible(!modalVisible);
+      }}
+    >
+      <TouchableWithoutFeedback onPress={handleClickOutside}>
+        <View style={styles.centeredView} className="bg-primaryBackground/50">
+          <TouchableWithoutFeedback>
+            <View
+              ref={refModal}
+              className="rounded-[10px] flex flex-row items-center gap-4 p-[12px] bg-[#6EFF8E] text-[#290B57]"
+            >
+              <AntDesign name="checkcircleo" size={24} color="black" />
+              <View>
+                <Text className="text-headlg font-headsemibold">
+                  Se ha agregado un nuevo presupuesto
+                </Text>
+                <Text className="text-headlg">Presupuesto “Ropa” creado</Text>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+      </TouchableWithoutFeedback>
+    </Modal>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  barContainer: {
+    height: 14,
+    width: "100%",
+    backgroundColor: "#e0e0e0",
+    borderRadius: 15,
+    overflow: "hidden",
+  },
+  bar: {
+    height: "100%",
+    backgroundColor: "#6EFF8E",
+    borderRadius: 15,
+  },
+  label: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#333",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+});

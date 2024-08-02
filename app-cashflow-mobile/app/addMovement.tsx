@@ -58,26 +58,33 @@ export default function AddMoney() {
       <LinearGradient
         style={{
           borderRadius: 40,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          paddingHorizontal: 40,
+          padding: 2,
         }}
-        className="opacity-50"
-        colors={["#FF00B8", "#04FD3B"]}
+        colors={["#0E4117", "#490B37"]}
         start={{ x: 1, y: 0 }}
         end={{ x: 0, y: 0 }}
       >
-        <TouchableOpacity onPress={() => setOption(false)}>
-          <Text className=" py-[14px]   border-neutralWhite font-headsemibold text-headxxl text-neutralWhite">
-            Ingresos
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setOption(true)}>
-          <Text className=" font-headsemibold text-headxxl text-neutralWhite">
-            Gastos
-          </Text>
-        </TouchableOpacity>
+        <View
+          className="bg-[#090215]"
+          style={{
+            borderRadius: 40,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingHorizontal: 40,
+          }}
+        >
+          <TouchableOpacity onPress={() => setOption(false)}>
+            <Text className=" py-[14px]   border-neutralWhite font-headsemibold text-headlg text-neutralWhite">
+              Ingresos
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setOption(true)}>
+            <Text className=" font-headsemibold text-headlg text-neutralWhite">
+              Gastos
+            </Text>
+          </TouchableOpacity>
+        </View>
       </LinearGradient>
       {!option ? (
         <Earnings />
