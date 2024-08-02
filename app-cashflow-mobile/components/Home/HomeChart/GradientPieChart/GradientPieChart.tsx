@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet, Dimensions } from "react-native";
-import { PieChart } from "react-native-svg-charts";
 import { Defs, LinearGradient, Stop, G, Path } from "react-native-svg";
 import { useEffect, useState } from "react";
 import { PieChartI } from "@/types";
+import { PieChart } from "react-native-gifted-charts";
 
 export const GradientPieChart = () => {
   const [dataOperations, setDataOperations] = useState<PieChartI>({
@@ -18,60 +18,69 @@ export const GradientPieChart = () => {
     });
   }, []);
 
-  const data = [
-    {
-      key: 1,
-      value: dataOperations.bills,
-      svg: { fill: "url(#gradient1)" },
-    },
-    {
-      key: 2,
-      value: dataOperations.income,
-      svg: { fill: "url(#gradient2)" },
-    },
+  const pieData = [
+    { value: 30, color: "#5C3D8C" },
+    { value: 70, color: "#ABFEBD" },
   ];
 
   return (
     <View style={styles.chartContain}>
-      <View style={styles.titleContain}>
-        <Text style={styles.one}>Ingresos</Text>
-        <Text style={styles.two}>Gastos</Text>
+      <Text className="text-neutralWhite font-headsemibold text-center text-headlg">
+        Total de la cuenta
+      </Text>
+      <Text className="text-primaryLighterGreen font-headsemibold text-center text-headxxl mb-5">
+        $50000 ARS
+      </Text>
+      <View className="flex  flex-row border py-[8px] rounded-[8px] justify-evenly border-[#290B57] mb-5 ">
+        <View className="flex flex-row gap-3">
+          <View
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 10,
+              backgroundColor: "#6EFF8E",
+            }}
+          ></View>
+          <Text className="text-headmd font-headbold text-neutralWhite">
+            Ingresos
+          </Text>
+        </View>
+        <View className="flex flex-row gap-3">
+          <View
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 10,
+              backgroundColor: "#5C3D8C",
+            }}
+          ></View>
+          <Text className="text-headmd font-headbold  text-neutralWhite">
+            Gastos
+          </Text>
+        </View>
       </View>
-
-      <View style={styles.totalContain}>
-        <Text style={styles.totalText}>{dataOperations.total}ARS</Text>
-        <Text style={styles.totalText2}>Total en la billetera</Text>
+      <View style={{marginHorizontal: "auto"}}>
+        <PieChart
+          donut
+          innerCircleColor={"#090215"}
+          innerRadius={80}
+          data={pieData}
+          centerLabelComponent={() => {
+            return <Text style={{ fontSize: 30 }}>70%</Text>;
+          }}
+        />
       </View>
-
-      <PieChart
-        style={{ height: 250 }}
-        data={data}
-        
-        outerRadius={"90%"}
-        innerRadius={"75%"}
-        padAngle={-0.57}
-        valueAccessor={({ item }) => item.value}
-      >
-        <Defs>
-          <LinearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#951971" />
-            <Stop offset="100%" stopColor="#3c1931" />
-          </LinearGradient>
-          <LinearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="100%" stopColor="#2cdf4c" />
-            <Stop offset="0%" stopColor="#1d6029" />
-          </LinearGradient>
-        </Defs>
-      </PieChart>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   chartContain: {
-    padding: 16,
+    width: "100%",
+    paddingVertical: 16,
     borderRadius: 8,
     backgroundColor: "#0A0219", // Color de fondo
+    marginHorizontal: "auto",
   },
   titleContain: {
     color: "#FFFFFF",
@@ -107,6 +116,6 @@ const styles = StyleSheet.create({
   },
   totalText2: {
     color: "#fff",
-    fontSize: 13
+    fontSize: 13,
   },
 });

@@ -4,9 +4,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { LinearGradient } from 'expo-linear-gradient'
 import { MaterialIcons } from '@expo/vector-icons'
 
-export default function GeneralButton({children, onPress}: any) {
+export default function GeneralButton({children, onPress, row, style}: any) {
   return (
-    <TouchableOpacity  onPress={onPress}>
+    <TouchableOpacity style={style} onPress={onPress}>
       <LinearGradient
         style={{
           paddingHorizontal: 23,
@@ -27,20 +27,26 @@ export default function GeneralButton({children, onPress}: any) {
         }}
       >
         {children}
-        <View
-          className="justify-center"
-          style={{
-            width: "auto",
-            height: 70,
-          }}
-        >
-          <MaterialIcons
-            name="keyboard-arrow-left"
-            color="white"
-            size={44}
-            className="text-[24px] rotate-180"
-          />
-        </View>
+        {
+          row ? (
+            <View
+            className="justify-center"
+            style={{
+              width: "auto",
+              height: 70,
+            }}
+          >
+            <MaterialIcons
+              name="keyboard-arrow-left"
+              color="white"
+              size={44}
+              className="text-[24px] rotate-180"
+            />
+          </View>
+
+          ): ""
+        }
+      
       </LinearGradient>
     </TouchableOpacity>
   )

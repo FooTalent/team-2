@@ -5,10 +5,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  Switch,
 } from "react-native";
-import { Entypo, Feather } from "@expo/vector-icons";
+import { Entypo, Feather, MaterialIcons } from "@expo/vector-icons";
 import { ButtonAction } from "../ButtonAction";
 import { router } from "expo-router";
+import { ThemedView } from "../ThemedView";
+import { LinearGradient } from "expo-linear-gradient";
 
 export const LoginRegister = ({
   show,
@@ -23,12 +26,37 @@ export const LoginRegister = ({
   const handleChange = (name: any, value: any) => {
     setFormData({ ...formData, [name]: value });
   };
+  const handleGoBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <Feather onPress={() => router.replace('auth ')} name="arrow-left-circle" size={50} style={styles.iconReturn} />
+    <View style={{ height: "100%" }}>
+      <ThemedView className="flex flex-row justify-between">
+        <View className="  flex flex-row gap-[16px]">
+          <TouchableOpacity
+            onPress={handleGoBack}
+            style={{ backgroundColor: "#290B57", borderRadius: 100 }}
+          >
+            <MaterialIcons
+              name="keyboard-arrow-left"
+              color="#5c2aa7"
+              size={44}
+              className="text-[24px]"
+            />
+          </TouchableOpacity>
+          <Text className="text-neutralWhite font-headbold text-headxxl align-middle">
+            CashFlow
+          </Text>
+        </View>
+      </ThemedView>
       {show === "register" ? (
         <>
+          <Text className="text-primaryLightGreen mb-3 text-headmd font-headbold">
+            Datos del perfil
+          </Text>
           <Text style={styles.textInput}>Nombre de Usuario</Text>
           <TextInput
             style={styles.input}
@@ -36,13 +64,9 @@ export const LoginRegister = ({
             value={formData.username}
             onChangeText={(text) => handleChange("username", text)}
           />
-          <Text style={styles.textInput}>Apellido</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Apellido"
-            value={formData.lastName}
-            onChangeText={(text) => handleChange("lastName", text)}
-          />
+          <Text className="text-primaryLightGreen mb-3 text-headmd font-headbold">
+            Datos de cuenta
+          </Text>
           <Text style={styles.textInput}>Email</Text>
           <TextInput
             style={styles.input}
@@ -91,16 +115,56 @@ export const LoginRegister = ({
               />
             </TouchableOpacity>
           </View>
-          <View style={{ flexDirection: "row", justifyContent: "center" }}>
+          <View className="flex flex-row items-center">
+            <Switch />
+            <Text className="text-neutralLightGray">
+              Acepto términos y condiciones
+            </Text>
+          </View>
+          <LinearGradient
+            style={{
+              borderRadius: 40,
+              padding: 2,
+              width: "100%",
+            }}
+            colors={["#0E4117", "#490B37"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+          >
+            <TouchableOpacity
+              style={{
+                borderRadius: 40,
+                alignItems: "center",
+                paddingVertical: 10,
+              }}
+              className="flex flex-row"
+            >
+              <View className="items-center flex flex-row">
+                <Text className="text-neutralWhite text-headlg text-center">
+                  SIGUIENTE
+                </Text>
+                <MaterialIcons
+                  size={24}
+                  className="rotate-180 "
+                  name="arrow-back-ios"
+                  color="white"
+                />
+              </View>
+            </TouchableOpacity>
+          </LinearGradient>
+          {/* <View style={{ flexDirection: "row", justifyContent: "center" }}>
             <ButtonAction
               colorsForButton={["#A1CEDC", "#FF00B8"]}
               titleButton="Registrarse"
               action={handleRegister}
             />
-          </View>
+          </View> */}
         </>
       ) : (
-        <>
+        <View style={{ flex: 1, marginVertical: "50%" }}>
+          <Text className="text-center text-primaryLightGreen text-headlg">
+            Ingresa tus datos.
+          </Text>
           <Text style={styles.textInput}>Email</Text>
           <TextInput
             style={styles.input}
@@ -129,14 +193,38 @@ export const LoginRegister = ({
               />
             </TouchableOpacity>
           </View>
-          <View style={{ flexDirection: "row", justifyContent: "center" }}>
-            <ButtonAction
-              colorsForButton={["#A1CEDC", "#FF00B8"]}
-              titleButton="Login"
-              action={handleLogin}
-            />
-          </View>
-        </>
+          <LinearGradient
+            style={{
+              borderRadius: 40,
+              padding: 2,
+              width: "100%",
+            }}
+            colors={["#0E4117", "#490B37"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+          >
+            <TouchableOpacity
+              style={{
+                borderRadius: 40,
+                alignItems: "center",
+                paddingVertical: 10,
+              }}
+              className="flex flex-row"
+            >
+              <View className="items-center flex flex-row">
+                <Text className="text-neutralWhite text-headlg text-center">
+                  SIGUIENTE
+                </Text>
+                <MaterialIcons
+                  size={24}
+                  className="rotate-180 "
+                  name="arrow-back-ios"
+                  color="white"
+                />
+              </View>
+            </TouchableOpacity>
+          </LinearGradient>
+        </View>
       )}
     </View>
   );
@@ -165,9 +253,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textInput: {
-    fontSize: 20,
+    fontSize: 16,
     color: "#fff",
-    paddingLeft: 18,
     marginBottom: 10,
     fontWeight: "bold",
   },

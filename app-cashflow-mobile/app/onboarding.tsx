@@ -15,21 +15,22 @@ import Swiper from "react-native-swiper";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
 const Onboarding = () => {
   const [selectedValue, setSelectedValue] = useState("");
   const [budget, setBudget] = useState("");
-  const [markError, setMarkError] = useState(false)
+  const [markError, setMarkError] = useState(false);
   const router = useRouter();
 
   const completeOnboarding = async () => {
     if (selectedValue != "" && budget != "") {
-      await AsyncStorage.setItem('onboardingComplete', 'true');
+      await AsyncStorage.setItem("onboardingComplete", "true");
       router.replace("(tabs)");
-    } 
-    setMarkError(true)
+    }
+    setMarkError(true);
     return;
   };
 
@@ -43,81 +44,185 @@ const Onboarding = () => {
       style={{ backgroundColor: "#090215" }}
     >
       <View style={styles.slide}>
-        <Image
-          source={require("@/assets/images/onboard-1.png")}
-          style={styles.image}
-        />
-        <Text style={styles.textSlide}>Bienvenido a CashFlow</Text>
-        <Text style={styles.subTextSlide}>
-          Organiza tu dinero, alcanza tus metas.
-        </Text>
-      </View>
-      <View style={styles.slide}>
-        <Image
-          source={require("@/assets/images/onboard-2.png")}
-          style={styles.image}
-        />
-        <Text style={styles.textSlide}>Controla tus hábitos financieros.</Text>
-        <Text style={styles.subTextSlide}>
-          Planifica tus gastos mensuales y anuales de forma personalizada.
-        </Text>
-      </View>
-      <View style={styles.slide}>
-        <MaskedView
-          style={{
-            height: 80,
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          maskElement={
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <Text style={[styles.textSlideMask]}>Cashflow</Text>
-            </View>
-          }
-        >
-          <LinearGradient
-            colors={["#04FD3B", "#FF00B8"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={{ height: 80, width: "100%" }}
-          />
-        </MaskedView>
-        <View style={styles.inputContain}>
-          <Text style={styles.inputText}>¿Cuál es tu presupuesto?</Text>
-          <Text style={styles.smallText}>Añadir Presupuesto</Text>
-          <View style={markError ? styles.inputTextWrapperError : styles.inputTextWrapper}>
-            <TextInput
-              style={{ color: "#3B1575" }}
-              placeholder="Añade un presupuesto"
-              placeholderTextColor="#888"
-              onChangeText={setBudget}
-              value={budget}
-            />
-          </View>
-          {markError && <Text style={styles.smallTextError}>Completa este campo</Text>}
-          <Text style={styles.smallText}>¿Cuál es tu moneda de cambio?</Text>
-          <View style={markError ? styles.pickerWrapperError : styles.pickerWrapper}>
-            <Picker
-              selectedValue={selectedValue}
-              style={styles.picker}
-              onValueChange={(itemValue) => setSelectedValue(itemValue)}
-            >
-              <Picker.Item label="Seleccionar Divisa" value="" />
-              <Picker.Item label="Peso argentino (ARS) 🇦🇷" value="ARS" />
-            </Picker>
-          </View>
-          {markError && <Text style={styles.smallTextError}>Completa este campo</Text>}
-          <TouchableOpacity style={styles.button} onPress={completeOnboarding}>
+        <View className="flex  flex-row justify-between">
+          <Text className="text-neutralWhite text-headxxl ">CashFlow</Text>
+          <TouchableOpacity
+
+          /* onPress={() => router.push("addBudget")} */
+          >
             <LinearGradient
-              colors={["#04FD3B", "#FF00B8"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.buttonGradient}
+              style={{
+                borderRadius: 30,
+                padding: 2,
+              }}
+              colors={["#0E4117", "#490B37"]}
+              start={{ x: 1, y: 0 }}
+              end={{ x: 0, y: 0 }}
             >
-              <Text style={styles.buttonText}>Continuar</Text>
+              <View
+                className="bg-[#090215]"
+                style={{
+                  borderRadius: 30,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: 10,
+                }}
+              >
+                <Text className="text-neutralWhite font-headbold text-headmd align-middle">
+                  omitir
+                </Text>
+              </View>
             </LinearGradient>
           </TouchableOpacity>
+        </View>
+        <View
+          className="flex justify-center items-center "
+          style={{ marginVertical: "45%" }}
+        >
+          <Image
+            source={require("@/assets/images/onboard-1.png")}
+            style={styles.image}
+          />
+          <Text style={styles.textSlide}>Bienvenido a CashFlow</Text>
+          <Text style={styles.subTextSlide}>
+            Organiza tu dinero, alcanza tus metas.
+          </Text>
+        </View>
+      </View>
+      <View style={styles.slide}>
+        <View className="flex  flex-row justify-between">
+          <Text className="text-neutralWhite text-headxxl ">CashFlow</Text>
+          <TouchableOpacity
+
+          /* onPress={() => router.push("addBudget")} */
+          >
+            <LinearGradient
+              style={{
+                borderRadius: 30,
+                padding: 2,
+              }}
+              colors={["#0E4117", "#490B37"]}
+              start={{ x: 1, y: 0 }}
+              end={{ x: 0, y: 0 }}
+            >
+              <View
+                className="bg-[#090215]"
+                style={{
+                  borderRadius: 30,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: 10,
+                }}
+              >
+                <Text className="text-neutralWhite font-headbold text-headmd align-middle">
+                  omitir
+                </Text>
+              </View>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+        <View
+          className="flex justify-center items-center "
+          style={{ marginVertical: "45%" }}
+        >
+          <Image
+            source={require("@/assets/images/onboard-2.png")}
+            style={styles.image}
+          />
+          <Text style={styles.textSlide}>
+            Controla tus hábitos financieros.
+          </Text>
+          <Text style={styles.subTextSlide}>
+            Planifica tus gastos mensuales y anuales de forma personalizada.
+          </Text>
+        </View>
+      </View>
+      <View style={{ paddingHorizontal: 16, paddingVertical: 43 }}>
+        <View className="flex flex-row justify-between">
+          <Text className="text-neutralWhite text-headxxl ">CashFlow</Text>
+          <TouchableOpacity
+
+          /* onPress={() => router.push("addBudget")} */
+          >
+            <LinearGradient
+              style={{
+                borderRadius: 30,
+                padding: 2,
+              }}
+              colors={["#0E4117", "#490B37"]}
+              start={{ x: 1, y: 0 }}
+              end={{ x: 0, y: 0 }}
+            >
+              <View
+                className="bg-[#090215]"
+                style={{
+                  borderRadius: 30,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: 10,
+                }}
+              >
+                <Text className="text-neutralWhite font-headbold text-headmd align-middle">
+                  omitir
+                </Text>
+              </View>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ marginVertical: "50%", gap: 20 }}>
+          <Text
+            style={{ fontSize: 30, maxWidth: 300 }}
+            className="text-primaryLightGreen font-headbold"
+          >
+            Ingresa dinero tu cuenta
+          </Text>
+          <Text className="text-neutralWhite text-headlg">
+            Cantidad Inicial
+          </Text>
+          <TextInput
+            placeholder="5000"
+            className="rounded-[24px] bg-neutralWhite h-[40px] p-[16px] text-headlg"
+          />
+          <LinearGradient
+            style={{
+              borderRadius: 40,
+              padding: 2,
+              width: "100%",
+            }}
+            colors={["#0E4117", "#490B37"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+          >
+            <TouchableOpacity
+              style={{
+                borderRadius: 40,
+                alignItems: "center",
+                paddingVertical: 10,
+              }}
+              className="flex flex-row"
+            >
+              <View className="items-center flex flex-row">
+                <Text className="text-neutralWhite text-headlg text-center">
+                  SIGUIENTE
+                </Text>
+                <MaterialIcons
+                  size={24}
+                  className="rotate-180 "
+                  name="arrow-back-ios"
+                  color="white"
+                />
+              </View>
+            </TouchableOpacity>
+          </LinearGradient>
+          <Text>🇦🇷</Text>
+          <Text className="text-neutralLighterGray">
+            Estimado usuario de momento nuestra plataforma opera unicamente con
+            pesos argentinos.
+          </Text>
         </View>
       </View>
     </Swiper>
@@ -127,10 +232,9 @@ const Onboarding = () => {
 const styles = StyleSheet.create({
   slide: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: width,
+    width: "100%",
     paddingHorizontal: 16,
+    paddingVertical: 43,
   },
   textSlide: {
     color: "#fff",
@@ -178,7 +282,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 80,
     borderWidth: 2,
-    borderColor: "#E71D36"
+    borderColor: "#E71D36",
   },
   inputTextWrapper: {
     width: "100%",
@@ -204,7 +308,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 80,
     borderWidth: 2,
-    borderColor: "#E71D36"
+    borderColor: "#E71D36",
   },
   gradientButton: {
     width: "100%",
