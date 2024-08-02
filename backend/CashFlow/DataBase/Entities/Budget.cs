@@ -11,7 +11,6 @@
         public Money Money { get; set; }
 
         public DateTime CreatedDate { get; set; }
-        public List<Expense> Expenses { get; set; } = new List<Expense>();
 
         public string CategoryName { get; set; }
 

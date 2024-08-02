@@ -31,6 +31,13 @@ namespace CashFlow.Services
             return _mapper.Map<MoneyGenericDto>(money);
         }
 
+        public async Task<Money?> GetByIdRelations(int Id)
+        {
+            Money? money = await _moneyRepository.GetByRelations(Id);
+
+            return money;
+        }
+
         public Task<MoneyGenericDto> Update(MoneyGenericDto moneyDto)
         {
             throw new NotImplementedException();

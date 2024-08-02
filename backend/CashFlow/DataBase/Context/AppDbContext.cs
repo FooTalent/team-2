@@ -25,11 +25,17 @@ namespace CashFlow.DataBase.Context
                 .HasPrincipalKey(c => c.Name);
 
             modelBuilder.Entity<Category>().HasData(
-                new Category { Name = "Salud" },
+                new Category { Name = "Comida y Bebida" },
+                new Category { Name = "Compras" },
+                new Category { Name = "Vivienda" },
                 new Category { Name = "Transporte" },
-                new Category { Name = "Entretenimiento" },
-                new Category { Name = "Impuestos" },
-                new Category { Name = "Cosmeticos" }
+                new Category { Name = "Vehiculos" },
+                new Category { Name = "Vida y entretenimiento" },
+                new Category { Name = "Comunicaciones" },
+                new Category { Name = "Gastos financieros" },
+                new Category { Name = "Inversiones" },
+                new Category { Name = "Trabajo" },
+                new Category { Name = "Otros" }
                 );
 
             modelBuilder.Entity<Money>()

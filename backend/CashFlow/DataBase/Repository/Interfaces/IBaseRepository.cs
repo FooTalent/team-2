@@ -15,10 +15,10 @@
         void Update(TEntity entity);
     }
 
-/*   public interface IBaseRepositoryDto<TEntity>:IBaseRepository<TEntity> where TEntity : class
+   public interface IBaseRepositoryMapper<TEntity,TCreateDto,TGenericDto> where TEntity : class where TCreateDto : class where TGenericDto : class
     {
         
-        Task<Dto> Create<Dto>(TEntity entity);
+        Task<TGenericDto> Create(TCreateDto entity);
 
-    }*/
+    }
 }

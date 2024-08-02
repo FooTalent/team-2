@@ -5,23 +5,35 @@ using CashFlow.DTOs.User;
 using CashFlow.Services.Interfaces;
 using CashFlow.Utils;
 using System.Net;
+using System.Numerics;
 
 
 namespace CashFlow.Services
 {
-    public class UserService(UserRepository userRepository,IMapper mapper,ITokenService tokenService):IUserService
+    public class UserService(UserRepository userRepository, MoneyRepository moneyRepository , IMapper mapper,ITokenService tokenService):IUserService
     {
         private readonly UserRepository _userRepository = userRepository;
         private readonly IMapper _mapper = mapper;
         private readonly ITokenService _tokenService = tokenService;
+        private readonly MoneyRepository _moneyRepository = moneyRepository;
 
 
         public async Task<UserGenericDto> Create(UserCreateDto userDTO)
         {
             userDTO.Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
 
+
             User user = _mapper.Map<User>(userDTO);
             User userResponse = await _userRepository.Create(user);
+
+            Money money = new()
+            {
+                Rest = 0,
+                Total = 0,
+                UserId = userResponse.Id
+            };
+
+             await _moneyRepository.Create(money);
 
             return _mapper.Map<UserGenericDto>(userResponse);
         }
@@ -32,13 +44,15 @@ namespace CashFlow.Services
                                         ?? throw new CustomException(HttpStatusCode.Unauthorized,
                                                                 "Contrasena o email incorrectos");
 
+            var moneyCreated = await _moneyRepository.GetByUserId(userResponse.Id);
 
             if (BCrypt.Net.BCrypt.Verify(requestDTO.Password, userResponse.Password))
             {
                 var responseWithToken = new AuthResponseDto
                 {
                     Token = _tokenService.CreateToken(userResponse),
-                    User = _mapper.Map<UserGenericDto>(userResponse)
+                    User = _mapper.Map<UserGenericDto>(userResponse),
+                    MoneyId = moneyCreated?.Id
                 };
 
                 return responseWithToken;
