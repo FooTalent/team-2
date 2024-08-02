@@ -13,6 +13,10 @@ namespace CashFlow.DataBase.Context
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<User>()
+              .HasIndex(e => e.Email)
+              .IsUnique();
+
 
             modelBuilder.Entity<Budget>()
                 .HasOne(b => b.Category)
@@ -31,7 +35,6 @@ namespace CashFlow.DataBase.Context
             modelBuilder.Entity<Money>()
                 .HasIndex(u => u.UserId)
                 .IsUnique();
-
         }
 
 

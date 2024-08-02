@@ -1,4 +1,5 @@
-﻿using CashFlow.DTOs.User;
+﻿using CashFlow.DataBase.Entities;
+using CashFlow.DTOs.User;
 
 namespace CashFlow.Services.Interfaces
 {
@@ -7,7 +8,12 @@ namespace CashFlow.Services.Interfaces
 
         Task<UserGenericDto> Create(UserCreateDto userDTO);
 
+        Task<AuthResponseDto> Login(AuthRequestDto requestDTO);
+
+        
         Task<UserGenericDto?> GetById(int Id);
+
+        Task<List<User>> GetAll();
 
         Task<UserGenericDto> Update(UserGenericDto userDTO);
 
