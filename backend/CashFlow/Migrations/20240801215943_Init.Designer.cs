@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CashFlow.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240801131149_correction")]
-    partial class correction
+    [Migration("20240801215943_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,18 +43,18 @@ namespace CashFlow.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("MoneyId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TotalMoneyId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryName");
 
-                    b.HasIndex("TotalMoneyId");
+                    b.HasIndex("MoneyId");
 
                     b.ToTable("Budgets");
                 });
@@ -115,7 +115,7 @@ namespace CashFlow.Migrations
                     b.ToTable("Expenses");
                 });
 
-            modelBuilder.Entity("CashFlow.DataBase.Entities.TotalMoney", b =>
+            modelBuilder.Entity("CashFlow.DataBase.Entities.Money", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -137,7 +137,7 @@ namespace CashFlow.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("TotalMoneys");
+                    b.ToTable("Moneys");
                 });
 
             modelBuilder.Entity("CashFlow.DataBase.Entities.User", b =>
@@ -150,7 +150,7 @@ namespace CashFlow.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -166,6 +166,9 @@ namespace CashFlow.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Users");
                 });
 
@@ -177,15 +180,15 @@ namespace CashFlow.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CashFlow.DataBase.Entities.TotalMoney", "TotalMoney")
+                    b.HasOne("CashFlow.DataBase.Entities.Money", "Money")
                         .WithMany("Budgets")
-                        .HasForeignKey("TotalMoneyId")
+                        .HasForeignKey("MoneyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
 
-                    b.Navigation("TotalMoney");
+                    b.Navigation("Money");
                 });
 
             modelBuilder.Entity("CashFlow.DataBase.Entities.Expense", b =>
@@ -199,11 +202,11 @@ namespace CashFlow.Migrations
                     b.Navigation("Budget");
                 });
 
-            modelBuilder.Entity("CashFlow.DataBase.Entities.TotalMoney", b =>
+            modelBuilder.Entity("CashFlow.DataBase.Entities.Money", b =>
                 {
                     b.HasOne("CashFlow.DataBase.Entities.User", "User")
                         .WithOne("TotalMoney")
-                        .HasForeignKey("CashFlow.DataBase.Entities.TotalMoney", "UserId")
+                        .HasForeignKey("CashFlow.DataBase.Entities.Money", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -220,7 +223,7 @@ namespace CashFlow.Migrations
                     b.Navigation("budgets");
                 });
 
-            modelBuilder.Entity("CashFlow.DataBase.Entities.TotalMoney", b =>
+            modelBuilder.Entity("CashFlow.DataBase.Entities.Money", b =>
                 {
                     b.Navigation("Budgets");
                 });
