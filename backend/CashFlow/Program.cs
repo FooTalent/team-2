@@ -1,8 +1,6 @@
-using AutoMapper;
 using CashFlow.DataBase.Context;
 using CashFlow.DataBase.Repository;
 using CashFlow.DataBase.Repository.Interfaces;
-using CashFlow.Mappers;
 using CashFlow.Middleware;
 using CashFlow.Services;
 using CashFlow.Services.Interfaces;
@@ -23,7 +21,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<AppDbContext>(options=> options.UseSqlServer("Server=PIREZ\\SQLEXPRESS;DataBase=CashFlow;Integrated Security=True;TrustServerCertificate=True"));
+builder.Services.AddDbContext<AppDbContext>(options=> options.UseNpgsql("Host=<host>;Database=<dataname>;Username=<user>;Password=<password>;sslmode=Require"));;
 
 //Repositories
 builder.Services.AddScoped<UserRepository>();
@@ -87,11 +85,13 @@ builder.Services.AddSwaggerGen(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = "swagger";
+    });
 
 app.UseCors("CashFlow");
 
