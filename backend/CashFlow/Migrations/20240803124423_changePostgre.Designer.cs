@@ -3,17 +3,17 @@ using System;
 using CashFlow.DataBase.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace CashFlow.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240801215943_Init")]
-    partial class Init
+    [Migration("20240803124423_changePostgre")]
+    partial class changePostgre
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,34 +21,34 @@ namespace CashFlow.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.7")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("CashFlow.DataBase.Entities.Budget", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("MoneyId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -62,7 +62,7 @@ namespace CashFlow.Migrations
             modelBuilder.Entity("CashFlow.DataBase.Entities.Category", b =>
                 {
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.HasKey("Name");
 
@@ -71,7 +71,15 @@ namespace CashFlow.Migrations
                     b.HasData(
                         new
                         {
-                            Name = "Salud"
+                            Name = "Comida y Bebida"
+                        },
+                        new
+                        {
+                            Name = "Compras"
+                        },
+                        new
+                        {
+                            Name = "Vivienda"
                         },
                         new
                         {
@@ -79,15 +87,31 @@ namespace CashFlow.Migrations
                         },
                         new
                         {
-                            Name = "Entretenimiento"
+                            Name = "Vehiculos"
                         },
                         new
                         {
-                            Name = "Impuestos"
+                            Name = "Vida y entretenimiento"
                         },
                         new
                         {
-                            Name = "Cosmeticos"
+                            Name = "Comunicaciones"
+                        },
+                        new
+                        {
+                            Name = "Gastos financieros"
+                        },
+                        new
+                        {
+                            Name = "Inversiones"
+                        },
+                        new
+                        {
+                            Name = "Trabajo"
+                        },
+                        new
+                        {
+                            Name = "Otros"
                         });
                 });
 
@@ -95,42 +119,74 @@ namespace CashFlow.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
-                    b.Property<int>("BudgetId")
-                        .HasColumnType("int");
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("CaterogyId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("MoneyId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BudgetId");
+                    b.HasIndex("CategoryName");
+
+                    b.HasIndex("MoneyId");
 
                     b.ToTable("Expenses");
+                });
+
+            modelBuilder.Entity("CashFlow.DataBase.Entities.Income", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("MoneyId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MoneyId");
+
+                    b.ToTable("Income");
                 });
 
             modelBuilder.Entity("CashFlow.DataBase.Entities.Money", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Rest")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("numeric");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -144,25 +200,25 @@ namespace CashFlow.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("text");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -193,13 +249,30 @@ namespace CashFlow.Migrations
 
             modelBuilder.Entity("CashFlow.DataBase.Entities.Expense", b =>
                 {
-                    b.HasOne("CashFlow.DataBase.Entities.Budget", "Budget")
+                    b.HasOne("CashFlow.DataBase.Entities.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryName");
+
+                    b.HasOne("CashFlow.DataBase.Entities.Money", "Money")
                         .WithMany("Expenses")
-                        .HasForeignKey("BudgetId")
+                        .HasForeignKey("MoneyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Budget");
+                    b.Navigation("Category");
+
+                    b.Navigation("Money");
+                });
+
+            modelBuilder.Entity("CashFlow.DataBase.Entities.Income", b =>
+                {
+                    b.HasOne("CashFlow.DataBase.Entities.Money", "Money")
+                        .WithMany("Incomes")
+                        .HasForeignKey("MoneyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Money");
                 });
 
             modelBuilder.Entity("CashFlow.DataBase.Entities.Money", b =>
@@ -213,11 +286,6 @@ namespace CashFlow.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CashFlow.DataBase.Entities.Budget", b =>
-                {
-                    b.Navigation("Expenses");
-                });
-
             modelBuilder.Entity("CashFlow.DataBase.Entities.Category", b =>
                 {
                     b.Navigation("budgets");
@@ -226,6 +294,10 @@ namespace CashFlow.Migrations
             modelBuilder.Entity("CashFlow.DataBase.Entities.Money", b =>
                 {
                     b.Navigation("Budgets");
+
+                    b.Navigation("Expenses");
+
+                    b.Navigation("Incomes");
                 });
 
             modelBuilder.Entity("CashFlow.DataBase.Entities.User", b =>
