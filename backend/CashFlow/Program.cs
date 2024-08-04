@@ -21,7 +21,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<AppDbContext>(options=> options.UseNpgsql("Host=<host>;Database=<dataname>;Username=<user>;Password=<password>;sslmode=Require"));;
+var connectionString = builder.Configuration.GetConnectionString("PostgreSQLConnection");
+builder.Services.AddDbContext<AppDbContext>(options=> options.UseNpgsql(connectionString));;
 
 //Repositories
 builder.Services.AddScoped<UserRepository>();
