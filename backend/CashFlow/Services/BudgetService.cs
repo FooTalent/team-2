@@ -31,16 +31,16 @@ namespace CashFlow.Services
 
             if ( moneyUser.Rest < budgetDto.Amount )
             {
-                string message = moneyUser == null ? "No existe una entidad para moneyId" : "El monto es superior al disponible";
+                string message = "El monto es superior al disponible";
                 throw new CustomException(HttpStatusCode.NotAcceptable, message);
             }
 
 
             Budget budget = _mapper.Map<Budget>(budgetDto);
 
-            var response = await _budgetRepository.Create(budget);
+            moneyUser.DecreaseRest(budgetDto.Amount);
 
-            moneyUser.Rest -= budgetDto.Amount;
+            var response = await _budgetRepository.Create(budget);
 
 
             await _moneyRepository.Update(moneyUser);
@@ -52,7 +52,12 @@ namespace CashFlow.Services
 
         public async Task<bool> DeleteById(int Id)
         {
-              await _budgetRepository.DeleteById(Id);
+            BudgetGenericDto budget = await GetById(Id)
+                                        ?? throw new CustomException(HttpStatusCode.NotFound, "Prespuesto no encontrado");
+
+           await _budgetRepository.DeleteById(Id);
+
+
 
             return true;
         }

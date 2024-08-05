@@ -37,5 +37,13 @@ namespace CashFlow.Controllers
             return new JsonResult(budgetResponse);
         }
 
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteBudget(int Id)
+        {
+            var budgetResponse = await _budgetService.DeleteById(Id);
+
+            return budgetResponse ? new OkResult() : new BadRequestResult();
+        }
+
     }
 }
