@@ -14,6 +14,17 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -22,7 +33,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("PostgreSQLConnection");
-builder.Services.AddDbContext<AppDbContext>(options=> options.UseNpgsql(connectionString));;
+builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString)); ;
 
 //Repositories
 builder.Services.AddScoped<UserRepository>();
@@ -36,24 +47,12 @@ builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
 builder.Services.AddScoped<IMoneyService, MoneyService>();
-builder.Services.AddScoped<IExpensesService,ExpenseService>();
-builder.Services.AddScoped<IIncomeService,IncomeService>();
+builder.Services.AddScoped<IExpensesService, ExpenseService>();
+builder.Services.AddScoped<IIncomeService, IncomeService>();
 
 
 //Mappers 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-
-// Cors
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: "CashFlow", policy =>
-    {
-        policy.AllowAnyOrigin()
-        .AllowAnyHeader()
-        .AllowAnyMethod();
-    });
-});
 
 // JWT token
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -85,16 +84,16 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+app.UseCors("CorsPolicy");
+
 // Configure the HTTP request pipeline.
 
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-        c.RoutePrefix = "swagger";
-    });
-
-app.UseCors("CashFlow");
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    c.RoutePrefix = "swagger";
+});
 
 app.UseHttpsRedirection();
 
