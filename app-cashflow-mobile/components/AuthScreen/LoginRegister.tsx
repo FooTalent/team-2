@@ -20,17 +20,16 @@ export const LoginRegister = ({
   setFormData,
   handleRegister,
   handleLogin,
+  loading,
+
 }: any) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const handleChange = (name: any, value: any) => {
     setFormData({ ...formData, [name]: value });
   };
   const handleGoBack = () => {
-    if (router.canGoBack()) {
-      router.back();
-    }
+    router.replace("auth")
   };
 
   return (
@@ -58,12 +57,19 @@ export const LoginRegister = ({
           <Text className="text-primaryLightGreen mb-3 text-headmd font-headbold">
             Datos del perfil
           </Text>
-          <Text style={styles.textInput}>Nombre de Usuario</Text>
+          <Text style={styles.textInput}>Nombre</Text>
           <TextInput
             style={styles.input}
-            placeholder="Nombre de Usuario"
-            value={formData.username}
-            onChangeText={(text) => handleChange("username", text)}
+            placeholder="Nombre"
+            value={formData.firstName}
+            onChangeText={(text) => handleChange("firstName", text)}
+          />
+          <Text style={styles.textInput}>Apellido</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Apellido"
+            value={formData.lastName}
+            onChangeText={(text) => handleChange("lastName", text)}
           />
           <Text className="text-primaryLightGreen mb-3 text-headmd font-headbold">
             Datos de cuenta
@@ -148,15 +154,23 @@ export const LoginRegister = ({
               className="flex flex-row"
             >
               <View className="items-center flex flex-row">
-                <Text className="text-neutralWhite text-headlg text-center">
-                  SIGUIENTE
-                </Text>
-                <MaterialIcons
-                  size={24}
-                  className="rotate-180 "
-                  name="arrow-back-ios"
-                  color="white"
-                />
+                {loading ? (
+                  <Loading />
+                ) : (
+                  <>
+                    <Text className="text-neutralWhite text-headlg text-center">
+                      SIGUIENTE
+                    </Text>
+                    <MaterialIcons
+                      size={24}
+                      className="rotate-180 "
+                      name="arrow-back-ios"
+                      color="white"
+                    />
+                  </>
+
+                )}
+
               </View>
             </TouchableOpacity>
           </LinearGradient>
@@ -219,7 +233,7 @@ export const LoginRegister = ({
               }}
               disabled={loading}
               onPress={() => {
-                handleLogin(), setLoading(true);
+                handleLogin();
               }}
               className="flex flex-row"
             >
