@@ -5,7 +5,7 @@ import { PieChartI } from "@/types";
 import { PieChart } from "react-native-gifted-charts";
 import { MoneyService } from "@/services/MoneyService";
 
-export const GradientPieChart = () => {
+export const GradientPieChart = ({ moneyId }: any) => {
   const [dataOperations, setDataOperations] = useState<PieChartI>({
     income: null,
     bills: null,
@@ -19,8 +19,9 @@ export const GradientPieChart = () => {
 
   const getMoney = async () => {
     try {
-      const res = await new MoneyService().getMoney(1); // reemplazar por  el usuario logueado aqui
-      console.log(res)
+      if (!moneyId) return;
+      
+      const res = await new MoneyService().getMoney(moneyId);
       let expenses = res.expenses.reduce((current: any, acc: any) => {
         return current + acc.amount;
       }, 0);
@@ -39,13 +40,15 @@ export const GradientPieChart = () => {
         { value: expenses, color: "#5C3D8C" }, // Gastos
       ]);
     } catch (error) {
-      alert(`Se ha producido un error: ${error}`)
+      alert(`Se ha producido un error: ${error}`);
     }
   };
 
   useEffect(() => {
-    getMoney();
-  }, []);
+    if (moneyId) {
+      getMoney();
+    }
+  }, [moneyId]);
 
   return (
     <View style={styles.chartContain}>
