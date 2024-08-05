@@ -31,9 +31,9 @@ namespace CashFlow.Services
             return _mapper.Map<MoneyGenericDto>(money);
         }
 
-        public async Task<Money?> GetByIdRelations(int Id)
+        public async Task<MoneyGenericDto?> GetByIdRelations(int Id)
         {
-            Money? money = await _moneyRepository.GetByRelations(Id);
+            MoneyGenericDto? money = await _moneyRepository.GetByRelations(Id);
 
             return money;
         }

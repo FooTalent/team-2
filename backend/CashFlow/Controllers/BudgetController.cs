@@ -10,6 +10,14 @@ namespace CashFlow.Controllers
     {
         private readonly IBudgetService _budgetService= budgetService;
 
+        [HttpGet("presupuestos-del-usuario")]
+        public async Task<IActionResult> GetBudgetsByMoneyId(int Id)
+        {
+
+            var budgetResponse = await _budgetService.GetBudgetsByMoneyId(Id);
+
+            return budgetResponse == null ? new NotFoundResult() : new JsonResult(budgetResponse);
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetBudget(int Id)

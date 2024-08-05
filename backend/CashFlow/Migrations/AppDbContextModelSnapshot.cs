@@ -124,10 +124,8 @@ namespace CashFlow.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<string>("CategoryName")
+                        .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("CaterogyId")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
@@ -247,8 +245,10 @@ namespace CashFlow.Migrations
             modelBuilder.Entity("CashFlow.DataBase.Entities.Expense", b =>
                 {
                     b.HasOne("CashFlow.DataBase.Entities.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryName");
+                        .WithMany("expenses")
+                        .HasForeignKey("CategoryName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("CashFlow.DataBase.Entities.Money", "Money")
                         .WithMany("Expenses")
@@ -286,6 +286,8 @@ namespace CashFlow.Migrations
             modelBuilder.Entity("CashFlow.DataBase.Entities.Category", b =>
                 {
                     b.Navigation("budgets");
+
+                    b.Navigation("expenses");
                 });
 
             modelBuilder.Entity("CashFlow.DataBase.Entities.Money", b =>

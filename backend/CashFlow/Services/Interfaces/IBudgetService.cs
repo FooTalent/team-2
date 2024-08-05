@@ -1,4 +1,5 @@
 ﻿
+using CashFlow.DataBase.Entities;
 using CashFlow.DTOs.Budget;
 
 namespace CashFlow.Services.Interfaces
@@ -12,6 +13,8 @@ namespace CashFlow.Services.Interfaces
             Task<BudgetGenericDto> Update(BudgetGenericDto userDTO);
 
             Task<bool> DeleteById(int Id);
+
+        Task<List<Budget>> GetBudgetsByMoneyId(int Id);
        
     }
 }

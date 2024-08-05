@@ -12,7 +12,7 @@
 
         Task DeleteById(int id);
 
-        void Update(TEntity entity);
+        Task Update(TEntity entity);
     }
 
    public interface IBaseRepositoryMapper<TEntity,TCreateDto,TGenericDto> where TEntity : class where TCreateDto : class where TGenericDto : class

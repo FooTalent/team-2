@@ -8,5 +8,6 @@ namespace CashFlow.DataBase.Entities
         public string Name { get; set; }
 
         public List<Budget> budgets { get; set; } = new List<Budget>();
+        public List<Expense> expenses { get; set; } = new List<Expense>();
     }
 }

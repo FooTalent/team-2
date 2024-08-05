@@ -7,7 +7,7 @@ namespace CashFlow.DTOs.Expense
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
 
-        public int CaterogyId { get; set; }
+        public string CategoryName { get; set; }
 
         public int MoneyId { get; set; }
     }
