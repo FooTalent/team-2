@@ -50,6 +50,16 @@ namespace CashFlow.Controllers
         }
 
 
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteUser(int Id)
+        {
+            var response = await _userService.DeleteById(Id);
+
+
+            return response ? new OkResult(): new BadRequestResult();
+        }
+
+
 
     }
 }

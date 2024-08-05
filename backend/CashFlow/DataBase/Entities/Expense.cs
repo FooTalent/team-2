@@ -7,7 +7,8 @@ namespace CashFlow.DataBase.Entities
         public int Id { get; set; }
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
-        public int CaterogyId { get; set; }
+        public string CategoryName { get; set; }
+
         public Category Category { get; set; }
         public int MoneyId { get; set; }
 

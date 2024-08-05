@@ -76,10 +76,13 @@ namespace CashFlow.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteById(int Id)
+        public async Task<bool> DeleteById(int Id)
         {
-            throw new NotImplementedException();
+           await _userRepository.DeleteById(Id);
+
+            return true;
         }
+
 
         public async Task<List<User>> GetAll()
         {

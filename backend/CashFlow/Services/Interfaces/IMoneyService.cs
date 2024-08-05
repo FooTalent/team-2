@@ -1,17 +1,14 @@
-﻿using CashFlow.DataBase.Entities;
-using CashFlow.DTOs.TotalMoney;
-using CashFlow.DTOs.User;
+﻿using CashFlow.DTOs.TotalMoney;
 
 namespace CashFlow.Services.Interfaces
 {
     public interface IMoneyService
     {
-
         Task<MoneyGenericDto> Create(MoneyCreateDto moneyDto);
 
         Task<MoneyGenericDto?> GetById(int Id);
 
-        Task<Money?> GetByIdRelations(int Id);
+        Task<MoneyGenericDto?> GetByIdRelations(int Id);
 
         Task<MoneyGenericDto> Update(MoneyGenericDto moneyDto);
 
