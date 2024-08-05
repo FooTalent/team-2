@@ -12,6 +12,7 @@ import { ButtonAction } from "../ButtonAction";
 import { router } from "expo-router";
 import { ThemedView } from "../ThemedView";
 import { LinearGradient } from "expo-linear-gradient";
+import Loading from "../Loading";
 
 export const LoginRegister = ({
   show,
@@ -22,7 +23,7 @@ export const LoginRegister = ({
 }: any) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-
+  const [loading, setLoading] = useState<boolean>(false);
   const handleChange = (name: any, value: any) => {
     setFormData({ ...formData, [name]: value });
   };
@@ -116,7 +117,13 @@ export const LoginRegister = ({
             </TouchableOpacity>
           </View>
           <View className="flex flex-row items-center">
-            <Switch />
+            <Switch
+              style={styles.checkbox}
+              value={formData.terms}
+              onValueChange={(value) =>
+                setFormData({ ...formData, terms: value })
+              }
+            />
             <Text className="text-neutralLightGray">
               Acepto términos y condiciones
             </Text>
@@ -132,6 +139,7 @@ export const LoginRegister = ({
             end={{ x: 0, y: 1 }}
           >
             <TouchableOpacity
+              onPress={handleRegister}
               style={{
                 borderRadius: 40,
                 alignItems: "center",
@@ -209,18 +217,28 @@ export const LoginRegister = ({
                 alignItems: "center",
                 paddingVertical: 10,
               }}
+              disabled={loading}
+              onPress={() => {
+                handleLogin(), setLoading(true);
+              }}
               className="flex flex-row"
             >
               <View className="items-center flex flex-row">
-                <Text className="text-neutralWhite text-headlg text-center">
-                  SIGUIENTE
-                </Text>
-                <MaterialIcons
-                  size={24}
-                  className="rotate-180 "
-                  name="arrow-back-ios"
-                  color="white"
-                />
+                {loading ? (
+                  <Loading />
+                ) : (
+                  <>
+                    <Text className="text-neutralWhite text-headlg text-center">
+                      SIGUIENTE
+                    </Text>
+                    <MaterialIcons
+                      size={24}
+                      className="rotate-180 "
+                      name="arrow-back-ios"
+                      color="white"
+                    />
+                  </>
+                )}
               </View>
             </TouchableOpacity>
           </LinearGradient>

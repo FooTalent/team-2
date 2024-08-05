@@ -21,6 +21,7 @@
     "@react-native-masked-view/masked-view": "^0.3.1",
     "@react-native-picker/picker": "^2.7.7",
     "@react-navigation/native": "^6.0.2",
+    "axios": "^1.7.3",
     "d3-shape": "^3.2.0",
     "dayjs": "^1.11.12",
     "expo": "~51.0.21",

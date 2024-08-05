@@ -19,12 +19,28 @@ import GradientChartHome from "@/components/Home/GradientChartHome";
 import { Link, router } from "expo-router";
 import HomeChart from "@/components/Home/HomeChart/HomeChart";
 import GeneralButton from "@/components/GeneralButton";
+import { useEffect } from "react";
+import { useUserContext } from "../context/UserDataContext";
+import { getMoneyUser } from "../api/moneyAPI";
 
 export default function HomeScreen() {
   {
     /* <SimpleLineIcons name="home" size={24} color="black" /> */
   }
+  const { user, setUser } = useUserContext();
+  const getData = async () => {
+    console.log("USUARIO? ", user);
 
+    const data = await getMoneyUser(user.moneyId);
+    setUser({ ...user, money: data });
+  };
+  useEffect(() => {
+    if (user === null) {
+      router.push("auth")
+    }else{
+      getData();
+    }
+  }, []);
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -48,7 +64,7 @@ export default function HomeScreen() {
           </Text>
 
           <Text className=" font-headsemibold text-headxxl text-neutralWhite">
-            Clara!
+            {/* {user.firstName} */}!
           </Text>
         </View>
         <View className="flex bg-[#290B57] rounded-full border-2">
@@ -64,7 +80,6 @@ export default function HomeScreen() {
         {/* <HelloWave /> */}
       </ThemedView>
       <ThemedView>
-        
         <HomeChart />
       </ThemedView>
       <ThemedView className="gap-y-3">

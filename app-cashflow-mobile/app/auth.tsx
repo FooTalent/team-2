@@ -6,7 +6,7 @@ import {
   Touchable,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { MaskTitle } from "@/components/MaskTitle";
 import { ButtonAction } from "@/components/ButtonAction";
@@ -15,9 +15,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { login_user, register_user } from "./api/authAPI";
+import { useUserContext } from "./context/UserDataContext";
 
 const Auth = () => {
+  const { setUser } = useUserContext();
   const [show, setShow] = useState("");
+  const [erros, setError] = useState("");
   const [formData, setFormData] = useState({
     username: "",
     lastName: "",
@@ -29,12 +33,40 @@ const Auth = () => {
   const router = useRouter();
 
   const handleRegister = () => {
+    console.log("datos del formulario", formData);
+    if (formData.confirmPassword !== formData.password) {
+      return {
+        StatusCode: 500,
+        error: "Las contraseñas no coinciden",
+      };
+    } else {
+      const response = register_user({
+        firstName: formData.username,
+        lastName: "null",
+        email: formData.email,
+        password: formData.password,
+      });
+      return response;
+    }
+
     // Lógica de registro
   };
 
   const handleLogin = async () => {
-    await AsyncStorage.setItem("isLoggedIn", "true");
-    router.replace("(tabs)");
+    /* await AsyncStorage.setItem("isLoggedIn", "true");
+    router.replace("(tabs)"); */
+    const response = await login_user({
+      email: formData.email,
+      password: formData.password,
+    });
+    console.log("repsonse primer: ",response);
+    if (response.hasOwnProperty("StatusCode")) {
+      console.log("algo mal");
+    } else {
+      await AsyncStorage.setItem("isLoggedIn", "true");
+      setUser(response);
+      router.replace("(tabs)");
+    }
   };
 
   return (
@@ -73,7 +105,7 @@ const Auth = () => {
               end={{ x: 0, y: 0 }}
             >
               <TouchableOpacity
-              onPress={() => setShow("login")}
+                onPress={() => setShow("login")}
                 style={{
                   borderRadius: 40,
                   alignItems: "center",
@@ -103,10 +135,10 @@ const Auth = () => {
               }}
               colors={["#0E4117", "#490B37"]}
               start={{ x: 0, y: 0 }}
-              end={{ x: 0, y: 1, }}
+              end={{ x: 0, y: 1 }}
             >
               <TouchableOpacity
-              onPress={() => setShow("register")}
+                onPress={() => setShow("register")}
                 style={{
                   borderRadius: 40,
                   alignItems: "center",
@@ -127,7 +159,6 @@ const Auth = () => {
                 </View>
               </TouchableOpacity>
             </LinearGradient>
-
           </View>
         )}
       </ParallaxScrollView>
