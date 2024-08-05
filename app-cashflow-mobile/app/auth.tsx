@@ -15,58 +15,67 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { login_user, register_user } from "./api/authAPI";
-import { useUserContext } from "./context/UserDataContext";
+import { AuthService } from "@/services/AuthService";
+import { RegisterUserDto } from "@/types/dto/register-user.dto";
 
 const Auth = () => {
-  const { setUser } = useUserContext();
   const [show, setShow] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [erros, setError] = useState("");
   const [formData, setFormData] = useState({
-    username: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    termsAccepted: false,
+    firstName: null,
+    lastName: null,
+    email: null,
+    password: null,
+    confirmPassword: null,
+    terms: false,
   });
   const router = useRouter();
 
-  const handleRegister = () => {
-    console.log("datos del formulario", formData);
-    if (formData.confirmPassword !== formData.password) {
-      return {
-        StatusCode: 500,
-        error: "Las contraseñas no coinciden",
-      };
-    } else {
-      const response = register_user({
-        firstName: formData.username,
-        lastName: "null",
-        email: formData.email,
-        password: formData.password,
-      });
-      return response;
+  const handleRegister = async () => {
+    try {
+      const { firstName, lastName, email, password, confirmPassword, terms } = formData; 
+      if(password != confirmPassword) {
+        alert("Las contraseñas no coinciden")
+        return;
+      }
+      if(!terms) {
+        alert("Debes aceptar los terminos y condiciones")
+        return;
+      }
+      let newUser: RegisterUserDto = {
+        firstName,
+        lastName,
+        email,
+        password
+      } 
+      setLoading(true)
+      const res = await new AuthService().register(newUser)
+      setLoading(false)
+      setShow("login")
+    } catch (error) {
+      setLoading(false)
+      alert(error)
     }
-
-    // Lógica de registro
   };
 
   const handleLogin = async () => {
-    /* await AsyncStorage.setItem("isLoggedIn", "true");
-    router.replace("(tabs)"); */
-    const response = await login_user({
-      email: formData.email,
-      password: formData.password,
-    });
-    console.log("repsonse primer: ",response);
-    if (response.hasOwnProperty("StatusCode")) {
-      console.log("algo mal");
-    } else {
-      await AsyncStorage.setItem("isLoggedIn", "true");
-      setUser(response);
+    try {
+      const { email, password } = formData;
+      let loginUser = {
+        email,
+        password
+      }
+      setLoading(true)
+      const res = await new AuthService().login(loginUser)
+      await AsyncStorage.setItem("auth", JSON.stringify(res));
+      setLoading(false)
       router.replace("(tabs)");
+    } catch (error) {
+      setLoading(false)
+      alert(error)
     }
+
   };
 
   return (
@@ -84,6 +93,7 @@ const Auth = () => {
             setFormData={setFormData}
             handleRegister={handleRegister}
             handleLogin={handleLogin}
+            loading={loading}
           />
         ) : (
           <View style={styles.authContain}>

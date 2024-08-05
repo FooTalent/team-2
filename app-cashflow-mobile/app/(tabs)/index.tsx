@@ -19,28 +19,45 @@ import GradientChartHome from "@/components/Home/GradientChartHome";
 import { Link, router } from "expo-router";
 import HomeChart from "@/components/Home/HomeChart/HomeChart";
 import GeneralButton from "@/components/GeneralButton";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useUserContext } from "../context/UserDataContext";
 import { getMoneyUser } from "../api/moneyAPI";
+import { User } from "@/types/user";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen() {
   {
     /* <SimpleLineIcons name="home" size={24} color="black" /> */
   }
-  const { user, setUser } = useUserContext();
-  const getData = async () => {
-    console.log("USUARIO? ", user);
-
-    const data = await getMoneyUser(user.moneyId);
-    setUser({ ...user, money: data });
-  };
-  useEffect(() => {
-    if (user === null) {
-      router.push("auth")
-    }else{
-      getData();
+  const [dataAuth, setDataAuth] = useState<{
+    token: string | null;
+    user: User | null;
+    moneyId: number  | null
+  }>({
+    token: null,
+    user: null,
+    moneyId: null
+  });
+  
+  const getUser = async () => {
+    const authInfoString = await AsyncStorage.getItem("auth");
+    if (!authInfoString) {
+      router.replace("auth");
+      return;
     }
+
+    const authInfo = JSON.parse(authInfoString);
+    setDataAuth({
+      token: authInfo.token,
+      user: authInfo.user,
+      moneyId: authInfo.moneyId
+    });
+  };
+
+  useEffect(() => {
+    getUser();
   }, []);
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -64,7 +81,7 @@ export default function HomeScreen() {
           </Text>
 
           <Text className=" font-headsemibold text-headxxl text-neutralWhite">
-            {/* {user.firstName} */}!
+            {dataAuth.user?.firstName} {dataAuth.user?.lastName}!
           </Text>
         </View>
         <View className="flex bg-[#290B57] rounded-full border-2">
@@ -80,7 +97,7 @@ export default function HomeScreen() {
         {/* <HelloWave /> */}
       </ThemedView>
       <ThemedView>
-        <HomeChart />
+        <HomeChart moneyId={dataAuth.moneyId} />
       </ThemedView>
       <ThemedView className="gap-y-3">
         <TouchableOpacity onPress={() => router.push("addMovement")}>
@@ -162,7 +179,7 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </ThemedView>
 
-      <View>
+      {/* <View>
         <Link href={`/onboarding`}>
           <Text style={{ backgroundColor: "#fff" }}>Onboarding</Text>
         </Link>
@@ -171,7 +188,7 @@ export default function HomeScreen() {
         <Link href={`/auth`}>
           <Text style={{ backgroundColor: "#fff" }}>Auth</Text>
         </Link>
-      </View>
+      </View> */}
     </ParallaxScrollView>
   );
 }
