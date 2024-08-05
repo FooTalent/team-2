@@ -3,25 +3,49 @@ import { Defs, LinearGradient, Stop, G, Path } from "react-native-svg";
 import { useEffect, useState } from "react";
 import { PieChartI } from "@/types";
 import { PieChart } from "react-native-gifted-charts";
+import { MoneyService } from "@/services/MoneyService";
 
 export const GradientPieChart = () => {
   const [dataOperations, setDataOperations] = useState<PieChartI>({
-    income: 10000,
-    bills: 4000,
-    total: 8000,
+    income: null,
+    bills: null,
+    total: null,
   });
 
-  useEffect(() => {
-    setDataOperations({
-      ...dataOperations,
-      total: dataOperations.income - dataOperations.bills,
-    });
-  }, []);
+  const [pieData, setPieData] = useState([
+    { value: 0, color: "#6EFF8E" },
+    { value: 0, color: "#5C3D8C" },
+  ]);
 
-  const pieData = [
-    { value: 30, color: "#5C3D8C" },
-    { value: 70, color: "#ABFEBD" },
-  ];
+  const getMoney = async () => {
+    try {
+      const res = await new MoneyService().getMoney(1); // reemplazar por  el usuario logueado aqui
+      console.log(res)
+      let expenses = res.expenses.reduce((current: any, acc: any) => {
+        return current + acc.amount;
+      }, 0);
+      let incomes = res.incomes.reduce((current: any, acc: any) => {
+        return current + acc.amount;
+      }, 0);
+
+      setDataOperations({
+        income: incomes,
+        bills: expenses,
+        total: res.total,
+      });
+
+      setPieData([
+        { value: incomes, color: "#6EFF8E" }, // Ingresos
+        { value: expenses, color: "#5C3D8C" }, // Gastos
+      ]);
+    } catch (error) {
+      alert(`Se ha producido un error: ${error}`)
+    }
+  };
+
+  useEffect(() => {
+    getMoney();
+  }, []);
 
   return (
     <View style={styles.chartContain}>
@@ -29,7 +53,7 @@ export const GradientPieChart = () => {
         Total de la cuenta
       </Text>
       <Text className="text-primaryLighterGreen font-headsemibold text-center text-headxxl mb-5">
-        $50000 ARS
+        ${dataOperations.total} ARS
       </Text>
       <View className="flex  flex-row border py-[8px] rounded-[8px] justify-evenly border-[#290B57] mb-5 ">
         <View className="flex flex-row gap-3">
@@ -59,14 +83,16 @@ export const GradientPieChart = () => {
           </Text>
         </View>
       </View>
-      <View style={{marginHorizontal: "auto"}}>
+      <View style={{ marginHorizontal: "auto" }}>
         <PieChart
           donut
           innerCircleColor={"#090215"}
           innerRadius={80}
           data={pieData}
           centerLabelComponent={() => {
-            return <Text style={{ fontSize: 30 }}>70%</Text>;
+            const total = pieData.reduce((sum, entry) => sum + entry.value, 0);
+            const percentage = total ? ((pieData[0].value / total) * 100).toFixed(2) : 0;
+            return <Text style={{ fontSize: 30 }}>{percentage}%</Text>;
           }}
         />
       </View>
