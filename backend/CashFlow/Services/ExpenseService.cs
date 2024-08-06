@@ -23,11 +23,6 @@ namespace CashFlow.Services
 
             if(budgetExist != null)
             {
-             /*   if(budgetExist.Amount + money.Rest < expenseDTO.Amount)
-                {
-                    throw new CustomException(HttpStatusCode.NotAcceptable, "Monto mayor al disponible en la cuenta");
-                }*/
-
                 if(budgetExist.Amount < expenseDTO.Amount)
                 {
                     decimal value = expenseDTO.Amount - budgetExist.Amount;
@@ -37,14 +32,12 @@ namespace CashFlow.Services
                 }
                 else
                 {
-                    budgetExist.Amount -=  budgetExist.Amount - expenseDTO.Amount;
+                    budgetExist.DecrementAmount(expenseDTO.Amount);
                 }
-
             }
             else
             {
                 money.DecreaseRest(expenseDTO.Amount);
-
             }
 
             money.DecreaseTotal(expenseDTO.Amount);

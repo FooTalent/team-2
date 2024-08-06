@@ -27,13 +27,13 @@ namespace CashFlow.DataBase.Entities
 
         public void DecreaseTotal(decimal amount)
         {
-            if (Total - amount < 0) throw new CustomException(HttpStatusCode.NotAcceptable, "El dinero disponible en el Total no es suficiente");
+            if (Total - amount < 0) throw new CustomException(HttpStatusCode.NotAcceptable, "El dinero disponible no es suficiente");
             Total -= amount;
         }
 
         public void DecreaseRest(decimal amount)
         {
-            if (Rest - amount < 0) throw new CustomException(HttpStatusCode.NotAcceptable, "El dinero disponible en el resto no es suficiente"); ;
+            if (Rest - amount < 0) throw new CustomException(HttpStatusCode.NotAcceptable, "El dinero disponible no es suficiente"); ;
             Rest -= amount;
         }
 
