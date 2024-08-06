@@ -23,38 +23,24 @@ namespace CashFlow.Services
 
             if(budgetExist != null)
             {
-                if(budgetExist.Amount + money.Rest < expenseDTO.Amount)
-                {
-                    throw new CustomException(HttpStatusCode.NotAcceptable, "Monto mayor al disponible en la cuenta");
-                }
-
                 if(budgetExist.Amount < expenseDTO.Amount)
                 {
-                    money.Rest -= expenseDTO.Amount - budgetExist.Amount;
+                    decimal value = expenseDTO.Amount - budgetExist.Amount;
+                    money.DecreaseRest(value);
+
                     budgetExist.Amount = 0;
                 }
                 else
                 {
-                    budgetExist.Amount -=  budgetExist.Amount - expenseDTO.Amount;
+                    budgetExist.DecrementAmount(expenseDTO.Amount);
                 }
-
             }
             else
             {
-                if ( money.Rest < expenseDTO.Amount)
-                {
-                    throw new CustomException(HttpStatusCode.NotAcceptable, "Monto mayor al disponible en la cuenta");
-                }
-                money.Rest -= expenseDTO.Amount;
+                money.DecreaseRest(expenseDTO.Amount);
             }
 
-            if(money.Rest < 0 || money.Total < 0)
-            {
-
-                throw new CustomException(HttpStatusCode.NotAcceptable, "Error de logica monto total o resto negativos");
-            }
-
-                money.Total -= expenseDTO.Amount;
+            money.DecreaseTotal(expenseDTO.Amount);
 
             var response = await _expenseRepository.Create(expenseDTO);
 

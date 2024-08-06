@@ -1,6 +1,8 @@
 ﻿using CashFlow.DTOs.Budget;
 using CashFlow.Services.Interfaces;
+using CashFlow.Utils;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace CashFlow.Controllers
 {
@@ -35,6 +37,30 @@ namespace CashFlow.Controllers
             var budgetResponse = await _budgetService.Create(budget);
 
             return new JsonResult(budgetResponse);
+        }
+
+        [HttpPut("agregar-retirar-monto")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> AddRemoveAmount([FromBody] BudgetGenericDto budget,decimal Amount,bool Add = false, bool Remove = false)
+        {
+
+            if ((Add && Remove) ||(!Add && !Remove))
+            {
+                throw new CustomException(HttpStatusCode.NotAcceptable, "El valor Add o Remove, deben estar seteados uno en true y otro en false");
+            };
+
+            if (Add) await _budgetService.IncrementAmount(budget, Amount);
+            if (Remove) await _budgetService.DecrementAmount(budget, Amount);
+
+            return new OkResult();
+        }
+
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteBudget(int Id)
+        {
+            var budgetResponse = await _budgetService.DeleteById(Id);
+
+            return budgetResponse ? new OkResult() : new BadRequestResult();
         }
 
     }

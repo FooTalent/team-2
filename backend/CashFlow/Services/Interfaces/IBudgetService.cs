@@ -15,6 +15,9 @@ namespace CashFlow.Services.Interfaces
             Task<bool> DeleteById(int Id);
 
         Task<List<Budget>> GetBudgetsByMoneyId(int Id);
+
+        Task<bool> IncrementAmount(BudgetGenericDto budget,decimal amount);
+        Task<bool> DecrementAmount(BudgetGenericDto budget, decimal amount);
        
     }
 }

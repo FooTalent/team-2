@@ -18,12 +18,12 @@ namespace CashFlow.Services
             Money? money = await _moneyRepository.GetById(incomeDTO.MoneyId) 
                             ?? throw new CustomException(HttpStatusCode.NotFound, "Plata del usuario no encontrada para el campo MoneyId");
 
-            money.Total += incomeDTO.Amount;
-            money.Rest += incomeDTO.Amount;
+            money.IncrementTotal(incomeDTO.Amount);
+            money.IncrementRest(incomeDTO.Amount);
 
             var response = await _incomeRepository.Create(incomeDTO);
 
-            _moneyRepository.Update(money);
+         await  _moneyRepository.Update(money);
 
             return response;
         }

@@ -1,15 +1,25 @@
-﻿namespace CashFlow.DTOs.Budget
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CashFlow.DTOs.Budget
 {
     public class BudgetGenericDto
     {
+        [Required]
         public int Id { get; set; }
+       
+        [Required]
         public string Name { get; set; } = string.Empty;
+      
+        [Required]
         public decimal Amount { get; set; }
 
+        [Required]
         public int MoneyId { get; set; }
 
+        [Required]
         public DateTime CreatedDate { get; set; }
 
+        [Required]
         public string CategoryName { get; set; }
 
     }
