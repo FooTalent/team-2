@@ -17,16 +17,24 @@ import {
   View,
 } from "react-native";
 import GeneralButton from "../GeneralButton";
+import { movementAddEarn } from "@/app/api/moneyAPI";
 export default function Earnings() {
   const snapPoints = useMemo(() => ["50%"], []);
   const [newEarn, setNewEarn] = useState({
     amount: 0,
+    date: new Date().toISOString(),
+    moneyId: 2,
     origin: "",
-    date: dayjs().format("d [de] MMMM, DDDD"),
   });
+
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const handleOriginPress = (name: string) => {
     setNewEarn({ ...newEarn, origin: name });
+  };
+  const handleAddEarn = async() => {
+    const response = await movementAddEarn(newEarn);
+    console.log(response);
+    
   };
   const renderBackdrop = useCallback(
     (props: any) => (
@@ -90,6 +98,7 @@ export default function Earnings() {
           }}
         >
           <TextInput
+            onChangeText={(text) => setNewEarn({ ...newEarn, amount: +text })}
             placeholder="10000"
             keyboardType="number-pad"
             className="bg-neutralWhite rounded-full py-[8px] text-headxl px-[16px] w-[100%]"
@@ -158,13 +167,37 @@ export default function Earnings() {
         py-3 px-5
         rounded-[99px]  mt-[28px] mb-[28px] items-center justify-between"
         >
-          <TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              paddingRight: 25,
+            }}
+            onPress={() =>
+              setNewEarn({
+                ...newEarn,
+                date: dayjs(newEarn.date)
+                  .subtract(1, "day")
+                  .toISOString(),
+              })
+            }
+          >
             <MaterialIcons name="arrow-back-ios" size={24} color="white" />
           </TouchableOpacity>
           <Text className="text-headxl font-psemibold text-neutralWhite">
-            {dayjs().format("d [de] MMMM, DDDD")}
+            {dayjs(newEarn.date).format("D [de] MMMM, YYYY")}
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+          style={{
+            paddingLeft: 25,
+          }}
+            onPress={() =>
+              setNewEarn({
+                ...newEarn,
+                date: dayjs(newEarn.date)
+                  .add(1, "day")
+                  .toISOString(),
+              })
+            }
+          >
             <MaterialIcons
               name="arrow-back-ios"
               className="rotate-180 "
@@ -192,8 +225,9 @@ export default function Earnings() {
           </View>
         </TouchableOpacity>
 
-        <GeneralButton /* onPress={handleCloseBottomSheet} */>
+        <GeneralButton onPress={handleAddEarn}>
           <Text
+          
             style={{ marginHorizontal: "auto" }}
             className="text-headxl text-neutralWhite text-center font-headsemibold py-[8px]  "
           >

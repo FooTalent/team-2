@@ -16,12 +16,13 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Feather, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { PieChart } from "react-native-gifted-charts";
 import GradientChartHome from "@/components/Home/GradientChartHome";
-import { Link, router } from "expo-router";
+import { Link, router, useRootNavigationState } from "expo-router";
 import HomeChart from "@/components/Home/HomeChart/HomeChart";
 import GeneralButton from "@/components/GeneralButton";
 import { useEffect } from "react";
 import { useUserContext } from "../context/UserDataContext";
 import { getMoneyUser } from "../api/moneyAPI";
+import Loading from "@/components/Loading";
 
 export default function HomeScreen() {
   {
@@ -34,14 +35,18 @@ export default function HomeScreen() {
     const data = await getMoneyUser(user.moneyId);
     setUser({ ...user, money: data });
   };
+  const rootNavigationState = useRootNavigationState();
+/* 
   useEffect(() => {
-    if (user === null) {
-      router.push("auth")
-    }else{
-      getData();
+    if (rootNavigationState?.key) {
+      if (user ==null) {
+        router.push("auth");
+      } else {
+        getData();
+      }
     }
-  }, []);
-  return (
+  }, []); */
+  return /*  */(
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
       headerImage={
@@ -64,7 +69,7 @@ export default function HomeScreen() {
           </Text>
 
           <Text className=" font-headsemibold text-headxxl text-neutralWhite">
-            {/* {user.firstName} */}!
+            clara!
           </Text>
         </View>
         <View className="flex bg-[#290B57] rounded-full border-2">

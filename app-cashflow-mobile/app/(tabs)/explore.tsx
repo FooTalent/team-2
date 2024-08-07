@@ -16,22 +16,29 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import GeneralButton from "@/components/GeneralButton";
+import { getBudgets } from "../api/moneyAPI";
 export default function TabTwoScreen() {
   const [modalVisible, setModalVisible] = useState(true);
   const refModal = useRef<any>(null);
+  const [budgets, setBudgets] = useState<any>([]);
+  const getBusgets = async () => {
+    const response = await getBudgets(2);
+    console.log("response: ", response);
 
-  
+    setBudgets(response);
+  };
+  useEffect(() => {
+    console.log("se ejecuta");
+    
+    getBusgets();
+  }, []);
+
   const handleClickOutside = () => {
     setModalVisible(false);
   };
 
   const [firstTime, setFirstTime] = useState<boolean>(false);
-  const budgets = [
-    "Presupuesto 1",
-    "Presupuesto 2",
-    "Presupuesto 3",
-    "Presupuesto 4",
-  ];
+
   return (
     <View
       style={{
@@ -124,7 +131,7 @@ export default function TabTwoScreen() {
           </TouchableOpacity>
         </>
       ) : (
-        budgets.map((budget, index) => (
+        budgets.map((budget: any, index: any) => (
           <TouchableOpacity
             onPress={() => router.push(`budgets/${index}`)}
             style={{
@@ -140,14 +147,14 @@ export default function TabTwoScreen() {
             <View style={{ width: "20%" }}>
               <View className="bg-[#7d32ec] w-[50px] h-[50px] rounded-full flex items-center justify-center">
                 <Text className="text-neutralWhite text-headxxl ">
-                  {budget.slice(0, 1).toUpperCase()}
+                  {budget.name.slice(0, 1).toUpperCase()}
                 </Text>
               </View>
             </View>
             <View style={{ width: "70%" }} className="w-[70%]">
               <View className=" flex  flex-row justify-around">
                 <Text className="text-headlg   text-neutralWhite font-headsemibold">
-                  {budget}
+                  {budget.name}
                 </Text>
                 <Text
                   className="text-headlg text-[#6EFF8E] font-headsemibold"
@@ -178,33 +185,33 @@ export default function TabTwoScreen() {
           </TouchableOpacity>
         ))
       )}
-       <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        setModalVisible(!modalVisible);
-      }}
-    >
-      <TouchableWithoutFeedback onPress={handleClickOutside}>
-        <View style={styles.centeredView} className="bg-primaryBackground/50">
-          <TouchableWithoutFeedback>
-            <View
-              ref={refModal}
-              className="rounded-[10px] flex flex-row items-center gap-4 p-[12px] bg-[#6EFF8E] text-[#290B57]"
-            >
-              <AntDesign name="checkcircleo" size={24} color="black" />
-              <View>
-                <Text className="text-headlg font-headsemibold">
-                  Se ha agregado un nuevo presupuesto
-                </Text>
-                <Text className="text-headlg">Presupuesto “Ropa” creado</Text>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <TouchableWithoutFeedback onPress={handleClickOutside}>
+          <View style={styles.centeredView} className="bg-primaryBackground/50">
+            <TouchableWithoutFeedback>
+              <View
+                ref={refModal}
+                className="rounded-[10px] flex flex-row items-center gap-4 p-[12px] bg-[#6EFF8E] text-[#290B57]"
+              >
+                <AntDesign name="checkcircleo" size={24} color="black" />
+                <View>
+                  <Text className="text-headlg font-headsemibold">
+                    Se ha agregado un nuevo presupuesto
+                  </Text>
+                  <Text className="text-headlg">Presupuesto “Ropa” creado</Text>
+                </View>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </View>
   );
 }

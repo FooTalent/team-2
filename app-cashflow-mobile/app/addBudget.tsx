@@ -6,21 +6,42 @@ import {
   StyleSheet,
   Switch,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ThemedView } from "@/components/ThemedView";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import GeneralButton from "@/components/GeneralButton";
 import SelectDropdown from "react-native-select-dropdown";
+import { addNewBudget } from "./api/moneyAPI";
+import { getCategories } from "./api/categoryAPI";
 
 export default function AddBudget() {
-  const emojisWithIcons = [
-    { title: "Semana" },
-    { title: "Mes" },
-    { title: "Anual" },
-  ];
+  const [categories, setCategories] = useState([]);
   const [firstTime, setFirstTime] = useState<boolean>(true);
+  const getCategoriess = async () => {
+    const response = await getCategories();
+    console.log("response categorias: ", response);
+    setCategories(response);
+  };
+  useEffect(() => {
+    console.log("se ejecuto el useEffect");
+    
+    getCategoriess();
+  }, []);
+  const [formNewBudget, setFormNewBudget] = useState({
+    name: "",
+    amount: 0,
+    moneyId: 2,
+    createdDate: new Date().toISOString(),
+    categoryName: "",
+  });
+  const handleAddNewBudget = async () => {
+    console.log("##########################formNewBudget: ", formNewBudget);
+
+    const response = await addNewBudget(formNewBudget);
+    console.log("response agregar presupuesto: ", response);
+  };
   const handleGoBack = () => {
     if (router.canGoBack()) {
       router.back();
@@ -64,6 +85,9 @@ export default function AddBudget() {
             Nombre del presupuesto
           </Text>
           <TextInput
+            onChangeText={(text) =>
+              setFormNewBudget({ ...formNewBudget, name: text })
+            }
             placeholder="Ropa"
             className="p-[16px] rounded-[24px] text-headlg bg-neutralWhite text-black"
           />
@@ -73,29 +97,30 @@ export default function AddBudget() {
             Dinero del presupuesto
           </Text>
           <TextInput
-            placeholder="Ropa"
+            keyboardType="numeric"
+            onChangeText={(text) =>
+              setFormNewBudget({ ...formNewBudget, amount: +text })
+            }
+            placeholder="1000"
             className="p-[16px] rounded-[24px] text-headlg bg-neutralWhite text-black"
           />
         </View>
         <View>
           <Text className="text-neutralWhite text-headlg mb-3">Categoria</Text>
-          <TextInput
-            placeholder="Ropa"
-            className="p-[16px] rounded-[24px] text-headlg bg-neutralWhite text-black"
-          />
-        </View>
-        <View>
-          <Text className="text-neutralWhite text-headlg mb-3">Periodo</Text>
           <SelectDropdown
-            data={emojisWithIcons}
+            data={categories}
             onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index);
+              setFormNewBudget({ ...formNewBudget, categoryName: selectedItem });
             }}
             renderButton={(selectedItem, isOpened) => {
               return (
                 <View style={styles.dropdownButtonStyle}>
-                  <Text style={styles.dropdownButtonTxtStyle}>
-                    {(selectedItem && selectedItem.title) || "Select your mood"}
+                  <Text
+                    style={styles.dropdownButtonTxtStyle}
+                    className="text-neutralLighterGray"
+                  >
+                    {(selectedItem && selectedItem) ||
+                      "Selecciona una categoria"}
                   </Text>
                 </View>
               );
@@ -108,7 +133,7 @@ export default function AddBudget() {
                     ...(isSelected && { backgroundColor: "#D2D9DF" }),
                   }}
                 >
-                  <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
+                  <Text style={styles.dropdownItemTxtStyle}>{item}</Text>
                 </View>
               );
             }}
@@ -117,7 +142,9 @@ export default function AddBudget() {
           />
         </View>
       </View>
-      <Text className="text-neutralWhite text-headlg mt-10 mb-5">Notificaciones</Text>
+      <Text className="text-neutralWhite text-headlg mt-10 mb-5">
+        Notificaciones
+      </Text>
       <View className="flex flex-row items-center justify-between">
         <Text className="text-neutralLighterGray " style={{ maxWidth: "70%" }}>
           Notificar cuando supere el monto presupuestados
@@ -130,8 +157,13 @@ export default function AddBudget() {
         </Text>
         <Switch />
       </View>
-      <GeneralButton row={false}>
-        <Text className="text-center text-neutralWhite text-headxl font-headsemibold" style={{marginHorizontal: "auto"}}>GUARDAR</Text>
+      <GeneralButton onPress={handleAddNewBudget} row={false}>
+        <Text
+          className="text-center text-neutralWhite text-headxl font-headsemibold"
+          style={{ marginHorizontal: "auto" }}
+        >
+          GUARDAR
+        </Text>
       </GeneralButton>
     </View>
   );

@@ -11,8 +11,10 @@ import "../global.css";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { UserContextProvider, useUserContext } from "./context/UserDataContext";
-
+import "dayjs/locale/es";
+import dayjs from "dayjs";
 export default function RootLayout() {
+  dayjs.locale("es");
   const colorScheme = useColorScheme();
   const [initialRoute, setInitialRoute] = useState<string | null>(null);
   const resetOnboarding = async () => {

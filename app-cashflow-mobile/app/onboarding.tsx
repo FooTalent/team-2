@@ -26,11 +26,11 @@ const Onboarding = () => {
   const router = useRouter();
 
   const completeOnboarding = async () => {
-    if (selectedValue != "" && budget != "") {
+    /* if (selectedValue != "" && budget != "") { */
       await AsyncStorage.setItem("onboardingComplete", "true");
       router.replace("(tabs)");
-    }
-    setMarkError(true);
+    /* }
+    setMarkError(true); */
     return;
   };
 
@@ -47,7 +47,7 @@ const Onboarding = () => {
         <View className="flex  flex-row justify-between">
           <Text className="text-neutralWhite text-headxxl ">CashFlow</Text>
           <TouchableOpacity
-
+onPress={completeOnboarding}
           /* onPress={() => router.push("addBudget")} */
           >
             <LinearGradient
@@ -94,10 +94,11 @@ const Onboarding = () => {
         <View className="flex  flex-row justify-between">
           <Text className="text-neutralWhite text-headxxl ">CashFlow</Text>
           <TouchableOpacity
-
+          onPress={completeOnboarding}
           /* onPress={() => router.push("addBudget")} */
           >
             <LinearGradient
+              
               style={{
                 borderRadius: 30,
                 padding: 2,
@@ -143,7 +144,7 @@ const Onboarding = () => {
         <View className="flex flex-row justify-between">
           <Text className="text-neutralWhite text-headxxl ">CashFlow</Text>
           <TouchableOpacity
-
+onPress={completeOnboarding}
           /* onPress={() => router.push("addBudget")} */
           >
             <LinearGradient
