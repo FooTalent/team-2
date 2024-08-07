@@ -22,6 +22,12 @@ namespace CashFlow.DataBase.Context
                 .HasOne(b => b.Category)
                 .WithMany(c => c.budgets)
                 .HasForeignKey(b => b.CategoryName)
+                .HasPrincipalKey(c => c.Name); 
+            
+            modelBuilder.Entity<Expense>()
+                .HasOne(b => b.Category)
+                .WithMany(c => c.expenses)
+                .HasForeignKey(b => b.CategoryName)
                 .HasPrincipalKey(c => c.Name);
 
             modelBuilder.Entity<Category>().HasData(

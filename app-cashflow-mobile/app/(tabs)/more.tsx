@@ -160,8 +160,8 @@ const More = () => {
       >
         <Text onPress={async () => 
           {
+            await AsyncStorage.removeItem('auth');
             router.replace('auth')
-            await AsyncStorage.removeItem('isLoggedIn');
           }} className="text-plg align-middle text-[#7AED70] uppercase  font-headsemibold">
           Cerrar Sesion
         </Text>

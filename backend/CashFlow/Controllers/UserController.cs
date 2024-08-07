@@ -7,7 +7,7 @@ namespace CashFlow.Controllers
 {
     [ApiController]
     [Route("user")]
-    public class UserController(IUserService userService):ControllerBase
+    public class UserController(IUserService userService) : ControllerBase
     {
         private readonly IUserService _userService = userService;
 
@@ -47,6 +47,16 @@ namespace CashFlow.Controllers
             var userResponse = await _userService.Login(userAuth);
 
             return new JsonResult(userResponse);
+        }
+
+
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteUser(int Id)
+        {
+            var response = await _userService.DeleteById(Id);
+
+
+            return response ? new OkResult(): new BadRequestResult();
         }
 
 

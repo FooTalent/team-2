@@ -1,5 +1,5 @@
 export interface PieChartI {
-    income: number
-    bills: number
-    total: number
+    income: number | null
+    bills: number | null
+    total: number | null
 }
