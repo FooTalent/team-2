@@ -49,6 +49,7 @@ namespace CashFlow.DataBase.Repository
                         Date = e.Date,
                         CategoryName = e.CategoryName,
                         Id = e.Id,
+                        BudgetId = e.BudgetId,
                     }).ToList()
 
                 }).FirstOrDefaultAsync();

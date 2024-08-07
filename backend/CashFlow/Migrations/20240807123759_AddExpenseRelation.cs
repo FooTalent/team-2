@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CashFlow.Migrations
 {
     /// <inheritdoc />
-    public partial class changePostgre : Migration
+    public partial class AddExpenseRelation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,8 +29,7 @@ namespace CashFlow.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FirstName = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "text", nullable: false),
+                    UserName = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false)
                 },
@@ -90,34 +89,6 @@ namespace CashFlow.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Expenses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CaterogyId = table.Column<int>(type: "integer", nullable: false),
-                    CategoryName = table.Column<string>(type: "text", nullable: true),
-                    MoneyId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Expenses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Expenses_Caterogies_CategoryName",
-                        column: x => x.CategoryName,
-                        principalTable: "Caterogies",
-                        principalColumn: "Name");
-                    table.ForeignKey(
-                        name: "FK_Expenses_Moneys_MoneyId",
-                        column: x => x.MoneyId,
-                        principalTable: "Moneys",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Income",
                 columns: table => new
                 {
@@ -125,6 +96,7 @@ namespace CashFlow.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
                     Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Origin = table.Column<string>(type: "text", nullable: false),
                     MoneyId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -132,6 +104,40 @@ namespace CashFlow.Migrations
                     table.PrimaryKey("PK_Income", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Income_Moneys_MoneyId",
+                        column: x => x.MoneyId,
+                        principalTable: "Moneys",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Expenses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CategoryName = table.Column<string>(type: "text", nullable: false),
+                    MoneyId = table.Column<int>(type: "integer", nullable: false),
+                    BudgetId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Expenses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Expenses_Budgets_BudgetId",
+                        column: x => x.BudgetId,
+                        principalTable: "Budgets",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Expenses_Caterogies_CategoryName",
+                        column: x => x.CategoryName,
+                        principalTable: "Caterogies",
+                        principalColumn: "Name",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Expenses_Moneys_MoneyId",
                         column: x => x.MoneyId,
                         principalTable: "Moneys",
                         principalColumn: "Id",
@@ -167,6 +173,11 @@ namespace CashFlow.Migrations
                 column: "MoneyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Expenses_BudgetId",
+                table: "Expenses",
+                column: "BudgetId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Expenses_CategoryName",
                 table: "Expenses",
                 column: "CategoryName");
@@ -198,13 +209,13 @@ namespace CashFlow.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Budgets");
-
-            migrationBuilder.DropTable(
                 name: "Expenses");
 
             migrationBuilder.DropTable(
                 name: "Income");
+
+            migrationBuilder.DropTable(
+                name: "Budgets");
 
             migrationBuilder.DropTable(
                 name: "Caterogies");

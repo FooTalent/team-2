@@ -23,8 +23,7 @@ namespace CashFlow.Middleware
                 await _next(context);
             }
             catch(CustomException error)
-            {
-                Console.WriteLine(error.Message, error);
+            { 
 
                 var result = JsonSerializer.Serialize(new
                 {
@@ -38,7 +37,6 @@ namespace CashFlow.Middleware
             }
             catch (Exception error)
             {
-                Console.WriteLine(error.Message, error);
 
                 var result = JsonSerializer.Serialize(new
                 {

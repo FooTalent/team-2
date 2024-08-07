@@ -23,6 +23,7 @@ namespace CashFlow.Services
 
             if(budgetExist != null)
             {
+                expenseDTO.BudgetId = budgetExist.Id;
                 if(budgetExist.Amount < expenseDTO.Amount)
                 {
                     decimal value = expenseDTO.Amount - budgetExist.Amount;

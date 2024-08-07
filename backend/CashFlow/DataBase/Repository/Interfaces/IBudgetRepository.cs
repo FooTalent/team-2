@@ -8,5 +8,7 @@ namespace CashFlow.DataBase.Repository.Interfaces
         Task<Budget?> IsExist(int moneyId, string CategoryName);
 
         Task<List<Budget>> GetAllUserBudgets(int Id);
+
+        Task<BudgetGenericDto> GetBudgetWithExpenses(int Id);
     }
 }

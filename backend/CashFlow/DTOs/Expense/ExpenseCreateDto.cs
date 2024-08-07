@@ -1,5 +1,4 @@
-﻿using CashFlow.DataBase.Entities;
-
+﻿
 namespace CashFlow.DTOs.Expense
 {
     public class ExpenseCreateDto
@@ -8,6 +7,7 @@ namespace CashFlow.DTOs.Expense
         public DateTime Date { get; set; }
 
         public string CategoryName { get; set; }
+        public int? BudgetId { get; set; }
 
         public int MoneyId { get; set; }
     }

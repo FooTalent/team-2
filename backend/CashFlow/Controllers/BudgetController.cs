@@ -21,14 +21,15 @@ namespace CashFlow.Controllers
             return budgetResponse == null ? new NotFoundResult() : new JsonResult(budgetResponse);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetBudget(int Id)
+        [HttpGet()]
+        public async Task<IActionResult> GetBudgets(int id)
         {
+            var budgetResponse = await _budgetService.GetBudgetWithExpenses(id);
 
-            var budgetResponse = await _budgetService.GetById(Id);
-
-            return budgetResponse == null ? new NotFoundResult() : new JsonResult(budgetResponse);
+            return new JsonResult(budgetResponse);
         }
+
+
 
         [HttpPost("create")]
         [Consumes("application/json")]
