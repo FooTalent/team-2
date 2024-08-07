@@ -8,7 +8,7 @@ namespace CashFlow.DTOs.Budget
         [Required]
         public string Name { get; set; } = string.Empty;
 
-        [Required]
+        [Required,Range(1,2000000)]
         public decimal Amount { get; set; }
 
         [Required]
