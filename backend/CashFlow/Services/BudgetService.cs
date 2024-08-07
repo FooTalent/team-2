@@ -21,6 +21,8 @@ namespace CashFlow.Services
         {
             Budget? budgetExist = await _budgetRepository.IsExist(budgetDto.MoneyId, budgetDto.CategoryName);
 
+            if (budgetDto.CategoryName == "Otros") throw new CustomException(HttpStatusCode.NotAcceptable, "No se puede crear presupuesto para la categoria Otros");
+
             if (budgetExist != null)
             {
                 throw new CustomException(HttpStatusCode.NotAcceptable, $"Ya existe un presupuesto con la categoria ${budgetDto.CategoryName} para este usuario");
@@ -125,6 +127,11 @@ namespace CashFlow.Services
             }
 
             return (moneyResponse, budgetResponse);
+        }
+
+        public async Task<BudgetGenericDto> GetBudgetWithExpenses(int Id)
+        {
+            return await _budgetRepository.GetBudgetWithExpenses(Id);
         }
     }
 }

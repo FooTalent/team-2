@@ -123,6 +123,9 @@ namespace CashFlow.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
+                    b.Property<int?>("BudgetId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -134,6 +137,8 @@ namespace CashFlow.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BudgetId");
 
                     b.HasIndex("CategoryName");
 
@@ -158,6 +163,10 @@ namespace CashFlow.Migrations
 
                     b.Property<int>("MoneyId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Origin")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -240,6 +249,10 @@ namespace CashFlow.Migrations
 
             modelBuilder.Entity("CashFlow.DataBase.Entities.Expense", b =>
                 {
+                    b.HasOne("CashFlow.DataBase.Entities.Budget", "Budget")
+                        .WithMany("expenses")
+                        .HasForeignKey("BudgetId");
+
                     b.HasOne("CashFlow.DataBase.Entities.Category", "Category")
                         .WithMany("expenses")
                         .HasForeignKey("CategoryName")
@@ -251,6 +264,8 @@ namespace CashFlow.Migrations
                         .HasForeignKey("MoneyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Budget");
 
                     b.Navigation("Category");
 
@@ -277,6 +292,11 @@ namespace CashFlow.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CashFlow.DataBase.Entities.Budget", b =>
+                {
+                    b.Navigation("expenses");
                 });
 
             modelBuilder.Entity("CashFlow.DataBase.Entities.Category", b =>

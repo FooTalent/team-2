@@ -3,7 +3,10 @@ using CashFlow.DataBase.Context;
 using CashFlow.DataBase.Entities;
 using CashFlow.DataBase.Repository.Interfaces;
 using CashFlow.DTOs.Budget;
+using CashFlow.DTOs.Expense;
+using CashFlow.Utils;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace CashFlow.DataBase.Repository
 {
@@ -22,7 +25,27 @@ namespace CashFlow.DataBase.Repository
             return budget;
         }
 
-       
+        public async Task<BudgetGenericDto> GetBudgetWithExpenses(int Id)
+        {
+            var r = await _context.Budgets.Where(x => x.Id == Id).Select(bud => new BudgetGenericDto
+            {
+                Id = bud.Id,
+                MoneyId = bud.MoneyId,
+                Amount = bud.Amount,
+                CategoryName = bud.CategoryName,
+                Name = bud.Name,
+                expenses =  bud.expenses.Select(exp => new ExpenseWithoutRelationsDto
+                {
+                    CategoryName = exp.CategoryName,
+                    Amount = exp.Amount,
+                    Date = exp.Date,
+                    Id = exp.Id,
+                }).ToList()
+
+            }).FirstOrDefaultAsync() ?? throw new CustomException(HttpStatusCode.NotFound, "Prespuesto no encontrado");
+
+            return r;
+        }
 
     }
 }

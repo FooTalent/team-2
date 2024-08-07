@@ -19,6 +19,8 @@ namespace CashFlow.DataBase.Entities
 
         public Category Category { get; set; }
 
+        public List<Expense> expenses { get; set; } = new List<Expense>();
+
 
         public void IncrementAmount(decimal amount)
         {

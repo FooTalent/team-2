@@ -1,6 +1,6 @@
 ﻿namespace CashFlow.DTOs.Expense
 {
-    public class ExpenseGenericDto
+    public class ExpenseWithoutRelationsDto
     {
         public int Id { get; set; }
         public decimal Amount { get; set; }
@@ -8,8 +8,5 @@
 
         public string CategoryName { get; set; }
 
-        public int? BudgetId { get; set; }
-
-        public int MoneyId { get; set; }
     }
 }

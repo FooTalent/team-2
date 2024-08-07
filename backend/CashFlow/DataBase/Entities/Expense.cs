@@ -15,5 +15,10 @@ namespace CashFlow.DataBase.Entities
         [JsonIgnore]
         public Money Money { get; set; }
 
+        public int? BudgetId { get; set; }
+
+        [JsonIgnore]
+        public Budget? Budget { get; set; }
+
     }
 }

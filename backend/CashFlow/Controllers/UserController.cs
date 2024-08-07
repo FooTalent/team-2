@@ -7,7 +7,7 @@ namespace CashFlow.Controllers
 {
     [ApiController]
     [Route("user")]
-    public class UserController(IUserService userService):ControllerBase
+    public class UserController(IUserService userService) : ControllerBase
     {
         private readonly IUserService _userService = userService;
 

@@ -16,6 +16,8 @@ namespace CashFlow.Services.Interfaces
 
         Task<List<Budget>> GetBudgetsByMoneyId(int Id);
 
+        Task<BudgetGenericDto> GetBudgetWithExpenses(int Id);
+
         Task<bool> IncrementAmount(BudgetGenericDto budget,decimal amount);
         Task<bool> DecrementAmount(BudgetGenericDto budget, decimal amount);
        

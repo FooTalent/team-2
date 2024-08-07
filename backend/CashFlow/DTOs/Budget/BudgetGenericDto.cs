@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CashFlow.DTOs.Expense;
+using System.ComponentModel.DataAnnotations;
 
 namespace CashFlow.DTOs.Budget
 {
@@ -21,6 +22,8 @@ namespace CashFlow.DTOs.Budget
 
         [Required]
         public string CategoryName { get; set; }
+
+        public List<ExpenseWithoutRelationsDto> expenses { get; set; } = [];
 
     }
 }
