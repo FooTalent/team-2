@@ -69,7 +69,7 @@ export default function RootLayout() {
                 name="budgets/[id]"
                 options={{ headerShown: false }}
               />
-              <Stack.Screen name="auth" options={{ headerShown: false }} />
+              <Stack.Screen name="auth" options={{ headerShown: false, headerLeft: ()=>null }} />
             </Stack>
           </ThemeProvider>
         </UserContextProvider>

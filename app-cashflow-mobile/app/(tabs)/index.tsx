@@ -77,7 +77,7 @@ export default function HomeScreen() {
           <Image
             style={{ width: 45.28, height: 45.28, borderRadius: 100 }}
             source={{
-              uri: "https://reactnative.dev/img/tiny_logo.png",
+              uri: "https://as1.ftcdn.net/v2/jpg/03/39/45/96/1000_F_339459697_XAFacNQmwnvJRqe1Fe9VOptPWMUxlZP8.jpg",
             }}
           />
           <Text className=" font-headlight text-headxxl text-neutralWhite">

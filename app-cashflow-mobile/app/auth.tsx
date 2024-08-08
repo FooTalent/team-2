@@ -97,25 +97,7 @@ const Auth = () => {
     };
     /* setLoading(true); */
     const res = await new AuthService().login(loginUser);
-    /* const quantity = await AsyncStorage.getItem("quantity");
-    const onboarding = await AsyncStorage.getItem("onboardingComplete"); */
 
-    /*       
-      if (quantity != "0" && quantity != null && onboarding == "true") {
-        console.log("QUANTITY: ", {
-          date: new Date().toISOString(),
-          amount: +quantity,
-          moneyId: res.moneyId,
-        });
-        const response = await movementAddEarn({
-          amout: +quantity,
-          date: new Date().toISOString(),
-          moneyId: res.moneyId,
-        });
-        console.log("RESPONSE DE AGREGR PLATA AL INICIO##############################: ", response);
-        
-        await AsyncStorage.removeItem("quantity");
-      } */
     console.log("RESPONSE: ", res);
     if (res.StatusCode == 401) {
       setModalInfo({
@@ -126,6 +108,25 @@ const Auth = () => {
       });
       setLoading(false);
     } else {
+      const quantity = await AsyncStorage.getItem("quantity");
+      const onboarding = await AsyncStorage.getItem("onboardingComplete");
+
+      if (quantity != "0" && quantity != null && onboarding == "true") {
+        const form ={
+          date: new Date().toISOString(),
+          amount: +quantity,
+          moneyId: res.moneyId,
+        };
+        const response = await movementAddEarn(form);
+        console.log("formmmmm: ", form);
+        
+        console.log(
+          "RESPONSE DE AGREGR PLATA AL INICIO##############################: ",
+          response
+        );
+
+        await AsyncStorage.removeItem("quantity");
+      }
       setUser(res);
       setLoading(false);
       router.replace("(tabs)");

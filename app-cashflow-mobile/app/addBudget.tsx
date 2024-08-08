@@ -213,13 +213,13 @@ export default function AddBudget() {
         <Text className="text-neutralLighterGray " style={{ maxWidth: "70%" }}>
           Notificar cuando supere el monto presupuestados
         </Text>
-        <Switch />
+        <Switch disabled />
       </View>
       <View className="flex flex-row items-center justify-between mb-5">
         <Text className="text-neutralLighterGray " style={{ maxWidth: "70%" }}>
           Notificar cuando se corra el riesgo de superar el presupuesto
         </Text>
-        <Switch />
+        <Switch disabled />
       </View>
       <GeneralButton
         onPress={async () => {
