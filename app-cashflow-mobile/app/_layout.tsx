@@ -36,7 +36,12 @@ export default function RootLayout() {
     };
     checkOnboarding();
   }, []);
-
+  /* useEffect(()=>{
+    const remove = async ()=>{
+      await AsyncStorage.removeItem("onboardingComplete");
+    }
+    remove()
+  },[]) */
   if (!initialRoute) {
     return <ActivityIndicator size="large" color="#fff" />;
   }

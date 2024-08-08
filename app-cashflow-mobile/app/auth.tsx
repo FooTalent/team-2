@@ -17,14 +17,23 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { AuthService } from "@/services/AuthService";
 import { RegisterUserDto } from "@/types/dto/register-user.dto";
+import AlertGlobal from "@/components/AlertGlobal";
+import { register_user } from "./api/authAPI";
+import { useUserContext } from "./context/UserDataContext";
+import { movementAddEarn } from "./api/moneyAPI";
 
 const Auth = () => {
+  const { user, setUser } = useUserContext();
   const [show, setShow] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [erros, setError] = useState("");
+  const [modalInfo, setModalInfo] = useState({
+    head: "",
+    p: "",
+    err: false,
+    modal: false,
+  });
   const [formData, setFormData] = useState({
-    firstName: null,
-    lastName: null,
+    userName: null,
     email: null,
     password: null,
     confirmPassword: null,
@@ -33,49 +42,95 @@ const Auth = () => {
   const router = useRouter();
 
   const handleRegister = async () => {
-    try {
-      const { firstName, lastName, email, password, confirmPassword, terms } = formData; 
-      if(password != confirmPassword) {
-        alert("Las contraseñas no coinciden")
-        return;
-      }
-      if(!terms) {
-        alert("Debes aceptar los terminos y condiciones")
-        return;
-      }
-      let newUser: RegisterUserDto = {
-        firstName,
-        lastName,
-        email,
-        password
-      } 
-      setLoading(true)
-      const res = await new AuthService().register(newUser)
-      setLoading(false)
-      setShow("login")
-    } catch (error) {
-      setLoading(false)
-      alert(error)
+    const { userName, email, password, confirmPassword, terms } = formData;
+    if (password != confirmPassword) {
+      setModalInfo({
+        err: true,
+        head: "Ha ocurrido un error",
+        p: "Las contraseñas no coinciden",
+        modal: true,
+      });
+      setLoading(false);
+      return;
     }
+    if (!terms) {
+      setModalInfo({
+        err: true,
+        head: "Ha ocurrido un error",
+        p: "Para usar la aplicacion, acepta los terminos",
+        modal: true,
+      });
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    const res = await register_user(formData);
+    console.log("RESPONSE: ", res);
+    console.log("formada: ", formData);
+
+    if (res.status == 400) {
+      setModalInfo({
+        err: true,
+        head: "Ha ocurrido un error",
+        p: res.errors.Password[0],
+        modal: true,
+      });
+      setLoading(false);
+    } else {
+      setModalInfo({
+        err: false,
+        head: "Registro exitoso",
+        p: "Usuario registrado correctamente",
+        modal: true,
+      });
+      setLoading(false);
+      setShow("login");
+    }
+    setLoading(false);
   };
 
   const handleLogin = async () => {
-    try {
-      const { email, password } = formData;
-      let loginUser = {
-        email,
-        password
-      }
-      setLoading(true)
-      const res = await new AuthService().login(loginUser)
-      await AsyncStorage.setItem("auth", JSON.stringify(res));
-      setLoading(false)
-      router.replace("(tabs)");
-    } catch (error) {
-      setLoading(false)
-      alert(error)
-    }
+    const { email, password } = formData;
+    let loginUser = {
+      email,
+      password,
+    };
+    /* setLoading(true); */
+    const res = await new AuthService().login(loginUser);
+    /* const quantity = await AsyncStorage.getItem("quantity");
+    const onboarding = await AsyncStorage.getItem("onboardingComplete"); */
 
+    /*       
+      if (quantity != "0" && quantity != null && onboarding == "true") {
+        console.log("QUANTITY: ", {
+          date: new Date().toISOString(),
+          amount: +quantity,
+          moneyId: res.moneyId,
+        });
+        const response = await movementAddEarn({
+          amout: +quantity,
+          date: new Date().toISOString(),
+          moneyId: res.moneyId,
+        });
+        console.log("RESPONSE DE AGREGR PLATA AL INICIO##############################: ", response);
+        
+        await AsyncStorage.removeItem("quantity");
+      } */
+    console.log("RESPONSE: ", res);
+    if (res.StatusCode == 401) {
+      setModalInfo({
+        err: true,
+        head: "Ha ocurrido un error",
+        p: "Usuario o contraseña incorrectos",
+        modal: true,
+      });
+      setLoading(false);
+    } else {
+      setUser(res);
+      setLoading(false);
+      router.replace("(tabs)");
+    }
+    setLoading(false);
   };
 
   return (
@@ -94,6 +149,9 @@ const Auth = () => {
             handleRegister={handleRegister}
             handleLogin={handleLogin}
             loading={loading}
+            setLoading={setLoading}
+            modalInfo={modalInfo}
+            setModalInfo={setModalInfo}
           />
         ) : (
           <View style={styles.authContain}>

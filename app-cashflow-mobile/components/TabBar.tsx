@@ -59,6 +59,7 @@ export default function TabBar({ state, descriptors, navigation }: any) {
 
         return (
           <TouchableOpacity
+            disabled={route.name == "more"}
             key={index}
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
@@ -76,11 +77,29 @@ export default function TabBar({ state, descriptors, navigation }: any) {
           >
             <View>
               {icons[route.name]({
-                color: isFocused ? "#110622" : "#ABFEBD",
+                color:
+                  route.name === "more"
+                    ? "gray"
+                    : isFocused
+                    ? "#110622"
+                    : "#ABFEBD",
+
                 marginHorizontal: "auto",
               })}
             </View>
-            <Text className="text-center" style={{color: isFocused ? "#110622": "#ABFEBD"}}>{label}</Text>
+            <Text
+              className="text-center"
+              style={{
+                color:
+                  route.name === "more"
+                    ? "gray"
+                    : isFocused
+                    ? "#110622"
+                    : "#ABFEBD",
+              }}
+            >
+              {label}
+            </Text>
           </TouchableOpacity>
         );
       })}

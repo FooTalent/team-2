@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -27,13 +27,20 @@ const Onboarding = () => {
 
   const completeOnboarding = async () => {
     /* if (selectedValue != "" && budget != "") { */
-      await AsyncStorage.setItem("onboardingComplete", "true");
-      router.replace("(tabs)");
+    await AsyncStorage.setItem("onboardingComplete", "true");
+    router.push("auth");
     /* }
     setMarkError(true); */
     return;
   };
 
+  useEffect(() => {
+    const createB = async () => {
+      await AsyncStorage.setItem("onboardingComplete", "false");
+      await AsyncStorage.setItem("quantity", "0");
+    };
+    createB();
+  }, []);
   return (
     <Swiper
       showsPagination
@@ -47,8 +54,8 @@ const Onboarding = () => {
         <View className="flex  flex-row justify-between">
           <Text className="text-neutralWhite text-headxxl ">CashFlow</Text>
           <TouchableOpacity
-onPress={completeOnboarding}
-          /* onPress={() => router.push("addBudget")} */
+            onPress={completeOnboarding}
+            /* onPress={() => router.push("addBudget")} */
           >
             <LinearGradient
               style={{
@@ -94,11 +101,10 @@ onPress={completeOnboarding}
         <View className="flex  flex-row justify-between">
           <Text className="text-neutralWhite text-headxxl ">CashFlow</Text>
           <TouchableOpacity
-          onPress={completeOnboarding}
-          /* onPress={() => router.push("addBudget")} */
+            onPress={completeOnboarding}
+            /* onPress={() => router.push("addBudget")} */
           >
             <LinearGradient
-              
               style={{
                 borderRadius: 30,
                 padding: 2,
@@ -144,8 +150,8 @@ onPress={completeOnboarding}
         <View className="flex flex-row justify-between">
           <Text className="text-neutralWhite text-headxxl ">CashFlow</Text>
           <TouchableOpacity
-onPress={completeOnboarding}
-          /* onPress={() => router.push("addBudget")} */
+            onPress={completeOnboarding}
+            /* onPress={() => router.push("addBudget")} */
           >
             <LinearGradient
               style={{
@@ -185,8 +191,11 @@ onPress={completeOnboarding}
             Cantidad Inicial
           </Text>
           <TextInput
+            onChangeText={async (tex) =>
+              await AsyncStorage.setItem("quantity", tex)
+            }
             placeholder="5000"
-            className="rounded-[24px] bg-neutralWhite h-[40px] p-[16px] text-headlg"
+            className="rounded-[24px] bg-neutralWhite h-[40px] p-[8px] text-headlg"
           />
           <LinearGradient
             style={{
@@ -199,6 +208,7 @@ onPress={completeOnboarding}
             end={{ x: 0, y: 1 }}
           >
             <TouchableOpacity
+              onPress={completeOnboarding}
               style={{
                 borderRadius: 40,
                 alignItems: "center",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   TextInput,
@@ -6,13 +6,16 @@ import {
   TouchableOpacity,
   Text,
   Switch,
+  Modal,
 } from "react-native";
-import { Entypo, Feather, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, Entypo, Feather, MaterialIcons } from "@expo/vector-icons";
 import { ButtonAction } from "../ButtonAction";
 import { router } from "expo-router";
 import { ThemedView } from "../ThemedView";
 import { LinearGradient } from "expo-linear-gradient";
 import Loading from "../Loading";
+import AlertGlobal from "../AlertGlobal";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 export const LoginRegister = ({
   show,
@@ -21,19 +24,22 @@ export const LoginRegister = ({
   handleRegister,
   handleLogin,
   loading,
-
+  modalInfo,
+  setModalInfo,
+  setLoading,
 }: any) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+
   const handleChange = (name: any, value: any) => {
     setFormData({ ...formData, [name]: value });
   };
   const handleGoBack = () => {
-    router.replace("auth")
+    router.replace("auth");
   };
 
   return (
-    <View style={{ height: "100%" }}>
+    <View style={{ display: "flex" }}>
       <ThemedView className="flex flex-row justify-between">
         <View className="  flex flex-row gap-[16px]">
           <TouchableOpacity
@@ -57,19 +63,12 @@ export const LoginRegister = ({
           <Text className="text-primaryLightGreen mb-3 text-headmd font-headbold">
             Datos del perfil
           </Text>
-          <Text style={styles.textInput}>Nombre</Text>
+          <Text style={styles.textInput}>Nombre de usuario</Text>
           <TextInput
             style={styles.input}
-            placeholder="Nombre"
-            value={formData.firstName}
-            onChangeText={(text) => handleChange("firstName", text)}
-          />
-          <Text style={styles.textInput}>Apellido</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Apellido"
-            value={formData.lastName}
-            onChangeText={(text) => handleChange("lastName", text)}
+            placeholder="Nombre de usuario"
+            value={formData.userName}
+            onChangeText={(text) => setFormData({ ...formData, userName: text })}
           />
           <Text className="text-primaryLightGreen mb-3 text-headmd font-headbold">
             Datos de cuenta
@@ -145,7 +144,7 @@ export const LoginRegister = ({
             end={{ x: 0, y: 1 }}
           >
             <TouchableOpacity
-              onPress={handleRegister}
+              onPress={()=>{handleRegister(), setLoading(true)}}
               style={{
                 borderRadius: 40,
                 alignItems: "center",
@@ -168,22 +167,13 @@ export const LoginRegister = ({
                       color="white"
                     />
                   </>
-
                 )}
-
               </View>
             </TouchableOpacity>
           </LinearGradient>
-          {/* <View style={{ flexDirection: "row", justifyContent: "center" }}>
-            <ButtonAction
-              colorsForButton={["#A1CEDC", "#FF00B8"]}
-              titleButton="Registrarse"
-              action={handleRegister}
-            />
-          </View> */}
         </>
       ) : (
-        <View style={{ flex: 1, marginVertical: "50%" }}>
+        <View style={{ marginVertical: "50%" }}>
           <Text className="text-center text-primaryLightGreen text-headlg">
             Ingresa tus datos.
           </Text>
@@ -233,7 +223,7 @@ export const LoginRegister = ({
               }}
               disabled={loading}
               onPress={() => {
-                handleLogin();
+                handleLogin(), setLoading(true);
               }}
               className="flex flex-row"
             >
@@ -258,11 +248,45 @@ export const LoginRegister = ({
           </LinearGradient>
         </View>
       )}
+      <AlertGlobal
+        head={modalInfo.head}
+        err={modalInfo.err}
+        p={modalInfo.p}
+        modalVisible={modalInfo }
+        setModalVisible={setModalInfo}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+  },
+
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
   iconReturn: {
     backgroundColor: "#fff",
     width: "16%",

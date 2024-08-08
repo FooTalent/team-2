@@ -16,16 +16,28 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import GeneralButton from "@/components/GeneralButton";
-import { getBudgets } from "../api/moneyAPI";
+import { getBudget, getBudgets } from "../api/moneyAPI";
+import Loading from "@/components/Loading";
+import { useUserContext } from "../context/UserDataContext";
 export default function TabTwoScreen() {
+  const {user} = useUserContext()
   const [modalVisible, setModalVisible] = useState(true);
   const refModal = useRef<any>(null);
   const [budgets, setBudgets] = useState<any>([]);
   const getBusgets = async () => {
-    const response = await getBudgets(2);
-    console.log("response: ", response);
+    const response = await getBudgets(user.moneyId);
+    
+    const budgetsPlusInfo = await Promise.all(
+      response.map(async (budget: any) => {
+        const detailedBudget = await getBudget(budget.id);
+        const total = detailedBudget.amount + detailedBudget.expenses.reduce((acc: any, item: any) => acc + item.amount, 0);
+        const porcentaje = (detailedBudget.expenses.reduce((acc: any, item: any) => acc + item.amount, 0) / total) * 100;
+        return { ...detailedBudget, total, porcentaje };
+      })
+    );
+    console.log("response PLUS INFO: ", budgetsPlusInfo);
 
-    setBudgets(response);
+    setBudgets(budgetsPlusInfo);
   };
   useEffect(() => {
     console.log("se ejecuta");
@@ -64,7 +76,8 @@ export default function TabTwoScreen() {
             Presupuesto
           </Text>
         </View>
-        <TouchableOpacity onPress={() => router.push("addBudget")}>
+        <TouchableOpacity onPress={() => router.push("addBudget")
+        }>
           <LinearGradient
             style={{
               borderRadius: 30,
@@ -82,6 +95,7 @@ export default function TabTwoScreen() {
                 justifyContent: "space-between",
                 alignItems: "center",
                 padding: 10,
+                gap: 5
               }}
             >
               <Text className="text-neutralWhite font-headbold text-headmd align-middle">
@@ -92,7 +106,7 @@ export default function TabTwoScreen() {
           </LinearGradient>
         </TouchableOpacity>
       </ThemedView>
-      {firstTime ? (
+      {budgets.length == 0  ? (
         <>
           <Image
             style={{
@@ -133,7 +147,8 @@ export default function TabTwoScreen() {
       ) : (
         budgets.map((budget: any, index: any) => (
           <TouchableOpacity
-            onPress={() => router.push(`budgets/${index}`)}
+          key={index}
+            onPress={() => router.push(`budgets/${budget.id}`)}
             style={{
               paddingHorizontal: 10,
               backgroundColor: "#290B57",
@@ -160,7 +175,7 @@ export default function TabTwoScreen() {
                   className="text-headlg text-[#6EFF8E] font-headsemibold"
                   style={{ marginLeft: "auto" }}
                 >
-                  $10
+                  ${budget.total}
                 </Text>
               </View>
               <View style={styles.container}>
@@ -169,7 +184,7 @@ export default function TabTwoScreen() {
                     style={[
                       styles.bar,
                       {
-                        width: `70%`,
+                        width: `${budget.porcentaje}%`,
                       },
                     ]}
                   />
@@ -185,33 +200,6 @@ export default function TabTwoScreen() {
           </TouchableOpacity>
         ))
       )}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <TouchableWithoutFeedback onPress={handleClickOutside}>
-          <View style={styles.centeredView} className="bg-primaryBackground/50">
-            <TouchableWithoutFeedback>
-              <View
-                ref={refModal}
-                className="rounded-[10px] flex flex-row items-center gap-4 p-[12px] bg-[#6EFF8E] text-[#290B57]"
-              >
-                <AntDesign name="checkcircleo" size={24} color="black" />
-                <View>
-                  <Text className="text-headlg font-headsemibold">
-                    Se ha agregado un nuevo presupuesto
-                  </Text>
-                  <Text className="text-headlg">Presupuesto “Ropa” creado</Text>
-                </View>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
     </View>
   );
 }

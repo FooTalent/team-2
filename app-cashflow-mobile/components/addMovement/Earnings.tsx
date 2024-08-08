@@ -1,5 +1,5 @@
 import { Feather, MaterialIcons } from "@expo/vector-icons";
-import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import dayjs from "dayjs";
 import { LinearGradient } from "expo-linear-gradient";
 import React, {
@@ -18,12 +18,24 @@ import {
 } from "react-native";
 import GeneralButton from "../GeneralButton";
 import { movementAddEarn } from "@/app/api/moneyAPI";
+import AlertGlobal from "../AlertGlobal";
+import Loading from "../Loading";
+import { router } from "expo-router";
+import { useUserContext } from "@/app/context/UserDataContext";
 export default function Earnings() {
+  const {user} = useUserContext();
   const snapPoints = useMemo(() => ["50%"], []);
+  const [loading, setLoading] = useState(false);
+  const [modalInfo, setModalInfo] = useState({
+    head: "",
+    p: "",
+    err: false,
+    modal: false,
+  });
   const [newEarn, setNewEarn] = useState({
     amount: 0,
     date: new Date().toISOString(),
-    moneyId: 2,
+    moneyId: user.money.id,
     origin: "",
   });
 
@@ -31,10 +43,29 @@ export default function Earnings() {
   const handleOriginPress = (name: string) => {
     setNewEarn({ ...newEarn, origin: name });
   };
-  const handleAddEarn = async() => {
-    const response = await movementAddEarn(newEarn);
-    console.log(response);
+  const handleAddEarn = async () => {
+    console.log("entra por acaaa");
     
+    const response = await movementAddEarn(newEarn);
+    console.log("RESPONSE DE AGREGAR MOVIENTO GANAR: ", response);
+    if (response.amount == newEarn.amount) {
+      setModalInfo({
+        head: "Ingreso agregado",
+        p: "El ingreso se ha agregado correctamente",
+        err: false,
+        modal: true,
+      });
+      setLoading(false);
+      router.replace("(tabs)");
+    }else{
+      setModalInfo({
+        head: "Ha ocurrido un error",
+        p: "El ingreso no se ha agregado correctamente",
+        err: true,
+        modal: true,
+      });
+      setLoading(false);
+    }
   };
   const renderBackdrop = useCallback(
     (props: any) => (
@@ -99,7 +130,7 @@ export default function Earnings() {
         >
           <TextInput
             onChangeText={(text) => setNewEarn({ ...newEarn, amount: +text })}
-            placeholder="10000"
+            placeholder="Ingrese la cantidad"
             keyboardType="number-pad"
             className="bg-neutralWhite rounded-full py-[8px] text-headxl px-[16px] w-[100%]"
           />
@@ -174,9 +205,7 @@ export default function Earnings() {
             onPress={() =>
               setNewEarn({
                 ...newEarn,
-                date: dayjs(newEarn.date)
-                  .subtract(1, "day")
-                  .toISOString(),
+                date: dayjs(newEarn.date).subtract(1, "day").toISOString(),
               })
             }
           >
@@ -186,15 +215,15 @@ export default function Earnings() {
             {dayjs(newEarn.date).format("D [de] MMMM, YYYY")}
           </Text>
           <TouchableOpacity
-          style={{
-            paddingLeft: 25,
-          }}
+                  disabled={dayjs(newEarn.date).isSame(dayjs(), "day")}
+
+            style={{
+              paddingLeft: 25,
+            }}
             onPress={() =>
               setNewEarn({
                 ...newEarn,
-                date: dayjs(newEarn.date)
-                  .add(1, "day")
-                  .toISOString(),
+                date: dayjs(newEarn.date).add(1, "day").toISOString(),
               })
             }
           >
@@ -206,7 +235,7 @@ export default function Earnings() {
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             marginVertical: 15,
             borderRadius: 10,
@@ -223,16 +252,23 @@ export default function Earnings() {
               Abrir calendario
             </Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <GeneralButton onPress={handleAddEarn}>
-          <Text
-          
-            style={{ marginHorizontal: "auto" }}
-            className="text-headxl text-neutralWhite text-center font-headsemibold py-[8px]  "
-          >
-            GUARDAR
-          </Text>
+        <GeneralButton
+          onPress={() => {
+            handleAddEarn(), setLoading(true);
+          }}
+        >
+          {loading ? (
+            <Loading />
+          ) : (
+            <Text
+              style={{ marginHorizontal: "auto" }}
+              className="text-headxl text-neutralWhite text-center font-headsemibold py-[8px]  "
+            >
+              GUARDAR
+            </Text>
+          )}
         </GeneralButton>
 
         <View className="bg-primaryPink">
@@ -241,44 +277,62 @@ export default function Earnings() {
             ref={bottomSheetRef}
             index={0}
             backdropComponent={renderBackdrop}
-            backgroundStyle={{ backgroundColor: "#480C36" }}
+            backgroundStyle={{ backgroundColor: "#0A0219" }}
             handleIndicatorStyle={{ backgroundColor: "#79747E" }}
             snapPoints={snapPoints}
           >
-            <LinearGradient
-              colors={["#480C36", "#0E4117"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 0, y: 1 }}
-              style={{ flex: 1 }}
-            >
+                   <BottomSheetScrollView >
+
               <View className=" flex flex-row flex-wrap  gap-5">
                 {categories.map((category, index) => (
-                  <View
-                    key={category.id}
-                    className="w-[80px]  flex-col items-center"
-                  >
-                    <TouchableOpacity
-                      onPress={() => bottomSheetRef.current?.close()}
-                      style={{
-                        paddingVertical: 4,
-                        paddingHorizontal: 20,
-                        marginVertical: 15,
-                        borderRadius: 40,
-                        backgroundColor: "#abfebd",
-                      }}
-                    >
-                      <Feather name="plus-circle" size={24} color="#ff00b8" />
-                    </TouchableOpacity>
-                    <Text className="text-headmd text-neutralWhite ml-2">
-                      {category.name}
-                    </Text>
-                  </View>
+                 <View key={category.id} className="flex-col items-center">
+                 <TouchableOpacity
+                   onPress={() => handleOriginPress(category.name)}
+                   style={{
+                     paddingVertical: 5,
+                     paddingHorizontal: 12,
+                     marginVertical: 15,
+                     borderRadius: 10,
+                     backgroundColor: "#290B57",
+                     borderColor: newEarn.origin == category.name ? "#6EFF8E" : "",
+                     borderWidth: newEarn.origin == category.name ? 1 : 0,
+                   }}
+                 >
+                   <View style={{ width: "auto" }}>
+                     <Text
+                       className={`text-neutralWhite rounded-[99px] text-headxl text-center  px-4 py-2 ${
+                         newEarn.origin == category.name
+                           ? "bg-primaryLighterGreen text-primaryBackground"
+                           : "bg-[#090215]"
+                       }`}
+                     >
+                       {category.name.slice(0, 1).toUpperCase()}
+                     </Text>
+                   </View>
+                   <Text
+                     className={`text-headmd py-2 text-neutralWhite ml-2 text-center ${
+                       newEarn.origin == category.name
+                         ? "text-bg-primaryLighterGreen"
+                         : "text-neutralWhite"
+                     }`}
+                   >
+                     {category.name}
+                   </Text>
+                 </TouchableOpacity>
+               </View>
                 ))}
               </View>
-            </LinearGradient>
+            </          BottomSheetScrollView >
           </BottomSheetModal>
         </View>
       </View>
+      <AlertGlobal
+        head={modalInfo.head}
+        err={modalInfo.err}
+        p={modalInfo.p}
+        modalVisible={modalInfo}
+        setModalVisible={setModalInfo}
+      />
     </>
   );
 }
