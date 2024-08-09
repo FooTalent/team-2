@@ -7,8 +7,17 @@ import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import GeneralButton from "@/components/GeneralButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUserContext } from "../context/UserDataContext";
 
 const More = () => {
+  const {setUser} = useUserContext();
+  const handleSignOut = async() =>{
+    console.log("qineqonweioqwnoenwioeqneiowneqionqeowenioqnono");
+    
+    await AsyncStorage.removeItem("auth");
+    setUser(null);
+    router.replace("auth");
+  }
   return (
     <View
       style={{
@@ -139,9 +148,11 @@ const More = () => {
         </TouchableOpacity>
       </View>
       <TouchableOpacity
+          onPress={handleSignOut}
         style={{
           display: "flex",
           flexDirection: "row",
+          alignItems: "center",
           borderBottomColor: "#7AED70",
           borderBottomWidth: 1,
           width: 132,
@@ -149,10 +160,6 @@ const More = () => {
         }}
       >
         <Text
-          onPress={async () => {
-            await AsyncStorage.removeItem("auth");
-            router.replace("auth");
-          }}
           className="text-plg align-middle text-[#7AED70] uppercase  font-headsemibold"
         >
           Cerrar Sesion

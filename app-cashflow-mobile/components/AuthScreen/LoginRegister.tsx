@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   TextInput,
@@ -34,6 +34,10 @@ export const LoginRegister = ({
   const handleChange = (name: any, value: any) => {
     setFormData({ ...formData, [name]: value });
   };
+  useEffect(()=>{
+    console.log("loading cargando");
+    
+  },[loading])
   const handleGoBack = () => {
     router.replace("auth");
   };
@@ -249,6 +253,7 @@ export const LoginRegister = ({
         </View>
       )}
       <AlertGlobal
+        setLoading={setLoading}
         head={modalInfo.head}
         err={modalInfo.err}
         p={modalInfo.p}

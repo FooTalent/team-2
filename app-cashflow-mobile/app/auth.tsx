@@ -33,59 +33,51 @@ const Auth = () => {
     modal: false,
   });
   const [formData, setFormData] = useState({
-    userName: null,
-    email: null,
-    password: null,
-    confirmPassword: null,
+    userName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
     terms: false,
   });
   const router = useRouter();
 
   const handleRegister = async () => {
     const { userName, email, password, confirmPassword, terms } = formData;
-    if (password != confirmPassword) {
+    if (password != confirmPassword || !terms) {
       setModalInfo({
         err: true,
         head: "Ha ocurrido un error",
-        p: "Las contraseñas no coinciden",
-        modal: true,
-      });
-      setLoading(false);
-      return;
-    }
-    if (!terms) {
-      setModalInfo({
-        err: true,
-        head: "Ha ocurrido un error",
-        p: "Para usar la aplicacion, acepta los terminos",
-        modal: true,
-      });
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    const res = await register_user(formData);
-    console.log("RESPONSE: ", res);
-    console.log("formada: ", formData);
-
-    if (res.status == 400) {
-      setModalInfo({
-        err: true,
-        head: "Ha ocurrido un error",
-        p: res.errors.Password[0],
+        p: "Las contraseñas no coinciden o no aceptaste los terminos",
         modal: true,
       });
       setLoading(false);
     } else {
-      setModalInfo({
-        err: false,
-        head: "Registro exitoso",
-        p: "Usuario registrado correctamente",
-        modal: true,
-      });
-      setLoading(false);
-      setShow("login");
+      const res = await register_user(formData);
+      console.log("RESPONSE: ", res.status == 400);
+
+      if (res.status == 400) {
+        console.log("ENTRA A ERROR");
+
+        setModalInfo({
+          err: true,
+          head: "Ha ocurrido un error",
+          p: "El correo ya esta registrado o no completaste bien los campos, la contraseña o usuario debe tener al menos 4 caracteres o no coinciden",
+          modal: true,
+        });
+        setLoading(false);
+      } else {
+        setModalInfo({
+          err: false,
+          head: "Registro exitoso",
+          p: "Usuario registrado correctamente",
+          modal: true,
+        });
+        setLoading(false);
+        setShow("login");
+      }
     }
+    console.log("sale por aca");
+    
     setLoading(false);
   };
 
@@ -112,14 +104,14 @@ const Auth = () => {
       const onboarding = await AsyncStorage.getItem("onboardingComplete");
 
       if (quantity != "0" && quantity != null && onboarding == "true") {
-        const form ={
+        const form = {
           date: new Date().toISOString(),
           amount: +quantity,
           moneyId: res.moneyId,
         };
         const response = await movementAddEarn(form);
         console.log("formmmmm: ", form);
-        
+
         console.log(
           "RESPONSE DE AGREGR PLATA AL INICIO##############################: ",
           response
@@ -131,7 +123,6 @@ const Auth = () => {
       setLoading(false);
       router.replace("(tabs)");
     }
-    setLoading(false);
   };
 
   return (

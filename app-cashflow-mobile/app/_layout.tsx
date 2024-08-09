@@ -37,6 +37,8 @@ export default function RootLayout() {
     checkOnboarding();
   }, []);
   /* useEffect(()=>{
+    
+    console.log("removing onboarding");
     const remove = async ()=>{
       await AsyncStorage.removeItem("onboardingComplete");
     }
@@ -54,14 +56,14 @@ export default function RootLayout() {
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
           >
             <Stack initialRouteName={initialRoute}>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false, headerLeft: ()=>null,  gestureEnabled: false }} />
               <Stack.Screen
                 name="addMovement"
                 options={{ headerShown: false }}
               />
               <Stack.Screen
                 name="onboarding"
-                options={{ headerShown: false }}
+                options={{ headerShown: false, headerLeft: ()=>null,  gestureEnabled: false }}
               />
               <Stack.Screen name="miprofile" options={{ headerShown: false }} />
               <Stack.Screen name="addBudget" options={{ headerShown: false }} />
@@ -69,7 +71,7 @@ export default function RootLayout() {
                 name="budgets/[id]"
                 options={{ headerShown: false }}
               />
-              <Stack.Screen name="auth" options={{ headerShown: false, headerLeft: ()=>null }} />
+              <Stack.Screen name="auth" options={{ headerShown: false, headerLeft: ()=>null,  gestureEnabled: false }} />
             </Stack>
           </ThemeProvider>
         </UserContextProvider>

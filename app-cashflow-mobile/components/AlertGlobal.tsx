@@ -9,10 +9,11 @@ export default function AlertGlobal({
   head,
   modalVisible,
   setModalVisible,
+  setLoading,
 }: any) {
   const handleClickOutside = () => {
     console.log("click outisede");
-
+    setLoading(false);
     setModalVisible({ ...modalVisible, modal: false });
   };
   return (
@@ -27,7 +28,7 @@ export default function AlertGlobal({
       <TouchableWithoutFeedback onPress={handleClickOutside}>
         <View className=" bg-primaryBackground/20 h-full flex">
           <View
-            style={{ marginVertical: "80%" }}
+            style={{ marginVertical: "80%", height: 100 }}
             className={`rounded-[10px]  flex flex-row items-center gap-4 p-[12px] ${
               err ? "bg-[#ff4d4d]" : "bg-[#6EFF8E]"
             } text-[#290B57]`}
@@ -39,7 +40,7 @@ export default function AlertGlobal({
             )}
             <View>
               <Text className="text-headlg font-headsemibold">{head}</Text>
-              <Text style={{maxWidth: 300}} className="text-headlg ">{p}</Text>
+              <Text style={{maxWidth: 250}} className="text-headlg ">{p}</Text>
             </View>
           </View>
         </View>
