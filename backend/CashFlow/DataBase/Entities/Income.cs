@@ -2,7 +2,7 @@
 
 namespace CashFlow.DataBase.Entities
 {
-    public class Income
+    public class IncomeEntity
     {
         public int Id { get; set; }
 
@@ -15,6 +15,6 @@ namespace CashFlow.DataBase.Entities
         public int MoneyId { get; set; }
 
         [JsonIgnore]
-        public Money Money { get; set; }
+        public MoneyEntity Money { get; set; }
     }
 }

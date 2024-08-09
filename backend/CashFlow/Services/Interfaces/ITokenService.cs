@@ -5,7 +5,7 @@ namespace CashFlow.Services.Interfaces
 {
     public interface ITokenService
     {
-        public string CreateToken(User userInfo);
+        public string CreateToken(UserEntity userInfo);
         public bool IsUserToken(int numUser, ClaimsPrincipal UserClaim);
     }
 }

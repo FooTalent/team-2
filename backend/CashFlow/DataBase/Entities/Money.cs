@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace CashFlow.DataBase.Entities
 {
-    public class Money
+    public class MoneyEntity
     {
 
         public int Id { get; set; }
@@ -15,13 +15,13 @@ namespace CashFlow.DataBase.Entities
         
         public int UserId { get; set; }
         
-        public User User { get; set; }
+        public UserEntity User { get; set; }
 
-        public List<Budget> Budgets { get; set; } = new List<Budget>();
+        public List<BudgetEntity> Budgets { get; set; } = new List<BudgetEntity>();
 
-        public List<Expense> Expenses  { get; set; } = new List<Expense>();
+        public List<ExpenseEntity> Expenses  { get; set; } = new List<ExpenseEntity>();
 
-        public List<Income> Incomes  { get; set; } = new List<Income>();
+        public List<IncomeEntity> Incomes  { get; set; } = new List<IncomeEntity>();
 
 
 

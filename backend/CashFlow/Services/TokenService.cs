@@ -16,7 +16,7 @@ namespace CryptoTracker_backend.Services
         }
 
 
-        public string CreateToken(User user)
+        public string CreateToken(UserEntity user)
         {
             List<Claim> claims =
             [
