@@ -81,7 +81,7 @@ export default function HomeScreen() {
           </Text>
 
           <Text className=" font-headsemibold text-headxxl text-neutralWhite">
-            {dataAuth.user?.firstName} {dataAuth.user?.lastName}!
+            {dataAuth.user?.userName}!
           </Text>
         </View>
         <View className="flex bg-[#290B57] rounded-full border-2">
