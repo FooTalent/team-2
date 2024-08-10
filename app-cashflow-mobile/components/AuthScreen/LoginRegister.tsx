@@ -57,19 +57,12 @@ export const LoginRegister = ({
           <Text className="text-primaryLightGreen mb-3 text-headmd font-headbold">
             Datos del perfil
           </Text>
-          <Text style={styles.textInput}>Nombre</Text>
+          <Text style={styles.textInput}>Username</Text>
           <TextInput
             style={styles.input}
             placeholder="Nombre"
-            value={formData.firstName}
-            onChangeText={(text) => handleChange("firstName", text)}
-          />
-          <Text style={styles.textInput}>Apellido</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Apellido"
-            value={formData.lastName}
-            onChangeText={(text) => handleChange("lastName", text)}
+            value={formData.userName}
+            onChangeText={(text) => handleChange("userName", text)}
           />
           <Text className="text-primaryLightGreen mb-3 text-headmd font-headbold">
             Datos de cuenta

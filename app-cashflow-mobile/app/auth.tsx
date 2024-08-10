@@ -21,10 +21,8 @@ import { RegisterUserDto } from "@/types/dto/register-user.dto";
 const Auth = () => {
   const [show, setShow] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [erros, setError] = useState("");
   const [formData, setFormData] = useState({
-    firstName: null,
-    lastName: null,
+    userName: null,
     email: null,
     password: null,
     confirmPassword: null,
@@ -34,23 +32,26 @@ const Auth = () => {
 
   const handleRegister = async () => {
     try {
-      const { firstName, lastName, email, password, confirmPassword, terms } = formData; 
-      if(password != confirmPassword) {
+      const { userName, email, password, confirmPassword, terms } = formData;
+      if (!userName || !email || !password || !confirmPassword) {
+        alert("Por favor completa todos los campos")
+        return;
+      }
+      if (password != confirmPassword) {
         alert("Las contraseñas no coinciden")
         return;
       }
-      if(!terms) {
+      if (!terms) {
         alert("Debes aceptar los terminos y condiciones")
         return;
       }
       let newUser: RegisterUserDto = {
-        firstName,
-        lastName,
+        userName,
         email,
         password
-      } 
+      }
       setLoading(true)
-      const res = await new AuthService().register(newUser)
+      await new AuthService().register(newUser)
       setLoading(false)
       setShow("login")
     } catch (error) {
@@ -60,22 +61,28 @@ const Auth = () => {
   };
 
   const handleLogin = async () => {
-    try {
-      const { email, password } = formData;
-      let loginUser = {
-        email,
-        password
-      }
-      setLoading(true)
-      const res = await new AuthService().login(loginUser)
-      await AsyncStorage.setItem("auth", JSON.stringify(res));
+    const { email, password } = formData;
+
+    if (!email || !password) {
+      alert("Por favor completa todos los campos")
+      return;
+    }
+    let loginUser = {
+      email,
+      password
+    }
+    setLoading(true)
+    const res = await new AuthService().login(loginUser)
+
+    if (res.StatusCode === 401) {
+      alert(res.Message)
       setLoading(false)
-      router.replace("(tabs)");
-    } catch (error) {
-      setLoading(false)
-      alert(error)
+      return;
     }
 
+    await AsyncStorage.setItem("auth", JSON.stringify(res));
+    setLoading(false)
+    router.replace("(tabs)");
   };
 
   return (
