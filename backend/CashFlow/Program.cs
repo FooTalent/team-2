@@ -1,85 +1,17 @@
-using CashFlow.DataBase.Context;
-using CashFlow.DataBase.Repository;
-using CashFlow.DataBase.Repository.Interfaces;
+using CashFlow.Configurations;
 using CashFlow.Middleware;
-using CashFlow.Services;
-using CashFlow.Services.Interfaces;
-using CryptoTracker_backend.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
-using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Cors
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy", builder =>
-    {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
-});
-
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("PostgreSQLConnection");
-builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString)); ;
-
-//Repositories
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<MoneyRepository>();
-builder.Services.AddScoped<ExpenseRepository>();
-builder.Services.AddScoped<IncomeRepository>();
-builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
-
-
-// Services
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IBudgetService, BudgetService>();
-builder.Services.AddScoped<IMoneyService, MoneyService>();
-builder.Services.AddScoped<IExpensesService, ExpenseService>();
-builder.Services.AddScoped<IIncomeService, IncomeService>();
-
-
-//Mappers 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-// JWT token
-builder.Services.AddScoped<ITokenService, TokenService>();
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value!)),
-        ValidateIssuer = false,
-        ValidateAudience = false
-    };
-});
-
-builder.Services.AddSwaggerGen(options =>
-{
-    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-    {
-        Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
-        In = ParameterLocation.Header,
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
-    });
-    options.OperationFilter<SecurityRequirementsOperationFilter>();
-});
+// Custom configurations
+builder.Services.AddCorsPolicy();
+builder.Services.AddSwagger();
+builder.Services.AddDataBaseConfig(builder.Configuration);
+builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddDependencyInjection();
 
 
 var app = builder.Build();
@@ -87,7 +19,6 @@ var app = builder.Build();
 app.UseCors("CorsPolicy");
 
 // Configure the HTTP request pipeline.
-
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using CashFlow.DataBase.Entities;
-using CashFlow.DTOs.Budget;
-using CashFlow.DTOs.Expense;
-using CashFlow.DTOs.Income;
-using CashFlow.DTOs.TotalMoney;
-using CashFlow.DTOs.User;
+using CashFlow.Modules.Budget.Dtos;
+using CashFlow.Modules.Money.Dtos;
+using CashFlow.Modules.Movements.Dtos.Expense;
+using CashFlow.Modules.Movements.Dtos.Income;
+using CashFlow.Modules.User.Dtos;
 
 namespace CashFlow.Mappers
 {
@@ -14,21 +14,21 @@ namespace CashFlow.Mappers
         public AutoMapping()
         {
 
-             CreateMap<UserCreateDto, User>().ReverseMap();
-             CreateMap<UserGenericDto, User>().ReverseMap();
+             CreateMap<UserCreateDto, UserEntity>().ReverseMap();
+             CreateMap<UserGenericDto, UserEntity>().ReverseMap();
 
 
-            CreateMap<BudgetCreateDto, Budget>().ReverseMap();
-            CreateMap<BudgetGenericDto, Budget>().ReverseMap();
+            CreateMap<BudgetCreateDto, BudgetEntity>().ReverseMap();
+            CreateMap<BudgetGenericDto, BudgetEntity>().ReverseMap();
 
-            CreateMap<MoneyCreateDto, Money>().ReverseMap();
-            CreateMap<MoneyGenericDto, Money>().ReverseMap();
+            CreateMap<MoneyCreateDto, MoneyEntity>().ReverseMap();
+            CreateMap<MoneyGenericDto, MoneyEntity>().ReverseMap();
 
-            CreateMap<ExpenseCreateDto, Expense>().ReverseMap();
-            CreateMap<ExpenseGenericDto, Expense>().ReverseMap();
+            CreateMap<ExpenseCreateDto, ExpenseEntity>().ReverseMap();
+            CreateMap<ExpenseGenericDto, ExpenseEntity>().ReverseMap();
 
-            CreateMap<IncomeGenericDto,Income>().ReverseMap();
-            CreateMap<IncomeCreateDto,Income>().ReverseMap();
+            CreateMap<IncomeGenericDto,IncomeEntity>().ReverseMap();
+            CreateMap<IncomeCreateDto,IncomeEntity>().ReverseMap();
 
 
         }

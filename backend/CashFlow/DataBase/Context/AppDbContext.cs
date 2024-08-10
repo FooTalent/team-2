@@ -13,51 +13,51 @@ namespace CashFlow.DataBase.Context
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<UserEntity>()
               .HasIndex(e => e.Email)
               .IsUnique();
 
 
-            modelBuilder.Entity<Budget>()
+            modelBuilder.Entity<BudgetEntity>()
                 .HasOne(b => b.Category)
                 .WithMany(c => c.budgets)
                 .HasForeignKey(b => b.CategoryName)
                 .HasPrincipalKey(c => c.Name); 
             
-            modelBuilder.Entity<Expense>()
+            modelBuilder.Entity<ExpenseEntity>()
                 .HasOne(b => b.Category)
                 .WithMany(c => c.expenses)
                 .HasForeignKey(b => b.CategoryName)
                 .HasPrincipalKey(c => c.Name);
 
-            modelBuilder.Entity<Category>().HasData(
-                new Category { Name = "Comida y Bebida" },
-                new Category { Name = "Compras" },
-                new Category { Name = "Vivienda" },
-                new Category { Name = "Transporte" },
-                new Category { Name = "Vehiculos" },
-                new Category { Name = "Vida y entretenimiento" },
-                new Category { Name = "Comunicaciones" },
-                new Category { Name = "Gastos financieros" },
-                new Category { Name = "Inversiones" },
-                new Category { Name = "Trabajo" },
-                new Category { Name = "Otros" }
+            modelBuilder.Entity<CategoryEntiy>().HasData(
+                new CategoryEntiy { Name = "Comida y Bebida" },
+                new CategoryEntiy { Name = "Compras" },
+                new CategoryEntiy { Name = "Vivienda" },
+                new CategoryEntiy { Name = "Transporte" },
+                new CategoryEntiy { Name = "Vehiculos" },
+                new CategoryEntiy { Name = "Vida y entretenimiento" },
+                new CategoryEntiy { Name = "Comunicaciones" },
+                new CategoryEntiy { Name = "Gastos financieros" },
+                new CategoryEntiy { Name = "Inversiones" },
+                new CategoryEntiy { Name = "Trabajo" },
+                new CategoryEntiy { Name = "Otros" }
                 );
 
-            modelBuilder.Entity<Money>()
+            modelBuilder.Entity<MoneyEntity>()
                 .HasIndex(u => u.UserId)
                 .IsUnique();
         }
 
 
-        public DbSet<User> Users => Set<User>();
+        public DbSet<UserEntity> Users => Set<UserEntity>();
 
-        public DbSet<Money> Moneys => Set<Money>();
+        public DbSet<MoneyEntity> Moneys => Set<MoneyEntity>();
 
-        public DbSet<Budget> Budgets => Set<Budget>();
+        public DbSet<BudgetEntity> Budgets => Set<BudgetEntity>();
 
-        public DbSet<Expense> Expenses => Set<Expense>();
+        public DbSet<ExpenseEntity> Expenses => Set<ExpenseEntity>();
 
-        public DbSet<Category> Caterogies => Set<Category>();
+        public DbSet<CategoryEntiy> Caterogies => Set<CategoryEntiy>();
     }
 }

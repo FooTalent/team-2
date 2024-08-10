@@ -3,7 +3,7 @@ using System.Net;
 
 namespace CashFlow.DataBase.Entities
 {
-    public class Budget
+    public class BudgetEntity
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -11,15 +11,15 @@ namespace CashFlow.DataBase.Entities
 
         public int MoneyId { get; set; }
 
-        public Money Money { get; set; }
+        public MoneyEntity Money { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
         public string CategoryName { get; set; }
 
-        public Category Category { get; set; }
+        public CategoryEntiy Category { get; set; }
 
-        public List<Expense> expenses { get; set; } = new List<Expense>();
+        public List<ExpenseEntity> expenses { get; set; } = new List<ExpenseEntity>();
 
 
         public void IncrementAmount(decimal amount)
