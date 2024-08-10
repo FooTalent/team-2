@@ -2,12 +2,12 @@
 
 namespace CashFlow.DataBase.Entities
 {
-    public class Category
+    public class CategoryEntiy
     {
         [Key]
         public string Name { get; set; }
 
-        public List<Budget> budgets { get; set; } = new List<Budget>();
-        public List<Expense> expenses { get; set; } = new List<Expense>();
+        public List<BudgetEntity> budgets { get; set; } = new List<BudgetEntity>();
+        public List<ExpenseEntity> expenses { get; set; } = new List<ExpenseEntity>();
     }
 }

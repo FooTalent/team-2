@@ -2,7 +2,7 @@
 
 namespace CashFlow.DataBase.Entities
 {
-    public class User
+    public class UserEntity
     {
 
         public int Id { get; set; }
@@ -12,7 +12,7 @@ namespace CashFlow.DataBase.Entities
 
         public string Password { get; set; } = string.Empty;
 
-        public Money TotalMoney { get; set; }
+        public MoneyEntity TotalMoney { get; set; }
 
     }
 }
