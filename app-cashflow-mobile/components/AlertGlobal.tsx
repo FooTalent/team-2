@@ -12,7 +12,6 @@ export default function AlertGlobal({
   setLoading,
 }: any) {
   const handleClickOutside = () => {
-    console.log("click outisede");
     setLoading(false);
     setModalVisible({ ...modalVisible, modal: false });
   };

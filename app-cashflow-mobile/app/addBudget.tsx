@@ -26,18 +26,15 @@ export default function AddBudget() {
   const [firstTime, setFirstTime] = useState<boolean>(true);
   const getCategoriess = async () => {
     const response = await getCategories();
-    console.log("response categorias: ", response);
     setCategories(response);
   };
   useEffect(() => {
-    console.log("se ejecuto el useEffect", user);
-
     getCategoriess();
   }, []);
   const [formNewBudget, setFormNewBudget] = useState({
     name: "",
     amount: 0,
-    moneyId: user.money.id,
+    moneyId: user.moneyId,
     createdDate: new Date().toISOString(),
     categoryName: "",
   });
@@ -78,17 +75,16 @@ export default function AddBudget() {
       setLoading(false);
       return;
     }
-    const response = await addNewBudget(formNewBudget);
-    console.log("response agregar presupuesto: ", response);
-    if (response.StatusCode == 406) {
-      setModalInfo({
-        head: "Error al agregar presupuesto",
-        p: response.Message,
-        err: true,
-        modal: true,
+    const response = await addNewBudget(formNewBudget)
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        return err.response;
       });
-      setLoading(false);
-    } else {
+    console.log("RESPONSE DE AGREGAR PRESUPUESTO. ", response);
+
+    if (response.amount == formNewBudget.amount) {
       setModalInfo({
         head: "Presupuesto agregado",
         p: "El presupuesto se ha agregado correctamente",
@@ -99,6 +95,14 @@ export default function AddBudget() {
       setTimeout(() => {
         router.replace("(tabs)");
       }, 2000);
+    } else {
+      setModalInfo({
+        head: "Error al agregar presupuesto",
+        p: "Ha ocurrido un error al agregar el presupuesto",
+        err: true,
+        modal: true,
+      });
+      setLoading(false);
     }
     setLoading(false);
   };
@@ -124,17 +128,17 @@ export default function AddBudget() {
     >
       <ThemedView className="flex flex-row justify-between">
         <View className="  flex flex-row gap-[16px]">
-        <TouchableOpacity
-          onPress={handleGoBack}
-          style={{ backgroundColor: "#290B57", borderRadius: 100 }}
-        >
-          <MaterialIcons
-            name="keyboard-arrow-left"
-            color="#7d32ec"
-            size={44}
-            className="text-[24px]"
-          />
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleGoBack}
+            style={{ backgroundColor: "#290B57", borderRadius: 100 }}
+          >
+            <MaterialIcons
+              name="keyboard-arrow-left"
+              color="#7d32ec"
+              size={44}
+              className="text-[24px]"
+            />
+          </TouchableOpacity>
           <Text className="text-neutralWhite font-headbold text-headxxl align-middle">
             Nuevo Presupuesto
           </Text>
@@ -244,6 +248,7 @@ export default function AddBudget() {
         p={modalInfo.p}
         modalVisible={modalInfo}
         setModalVisible={setModalInfo}
+        setLoading={setLoading}
       />
     </View>
   );

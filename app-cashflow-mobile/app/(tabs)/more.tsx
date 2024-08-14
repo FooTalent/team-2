@@ -12,11 +12,10 @@ import { useUserContext } from "../context/UserDataContext";
 const More = () => {
   const {setUser} = useUserContext();
   const handleSignOut = async() =>{
-    console.log("qineqonweioqwnoenwioeqneiowneqionqeowenioqnono");
     
     await AsyncStorage.removeItem("auth");
     setUser(null);
-    router.replace("auth");
+    router.push("auth");
   }
   return (
     <View

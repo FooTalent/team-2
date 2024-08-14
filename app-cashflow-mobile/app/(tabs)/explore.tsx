@@ -1,12 +1,8 @@
 import {
   StyleSheet,
   Image,
-  Platform,
   Text,
   View,
-  Modal,
-  Pressable,
-  TouchableWithoutFeedback,
 } from "react-native";
 
 import { ThemedView } from "@/components/ThemedView";
@@ -25,7 +21,9 @@ export default function TabTwoScreen() {
   const refModal = useRef<any>(null);
   const [budgets, setBudgets] = useState<any>([]);
   const getBusgets = async () => {
+    console.log("USUARIO???  ", user.moneyId );
     const response = await getBudgets(user.moneyId);
+    console.log("RESPONSE DE TRAER PRESPUESTOS: ", response);
     
     const budgetsPlusInfo = await Promise.all(
       response.map(async (budget: any) => {
@@ -35,12 +33,10 @@ export default function TabTwoScreen() {
         return { ...detailedBudget, total, porcentaje };
       })
     );
-    console.log("response PLUS INFO: ", budgetsPlusInfo);
 
     setBudgets(budgetsPlusInfo);
   };
   useEffect(() => {
-    console.log("se ejecuta");
     
     getBusgets();
   }, []);
@@ -168,7 +164,7 @@ export default function TabTwoScreen() {
             </View>
             <View style={{ width: "70%" }} className="w-[70%]">
               <View className=" flex  flex-row justify-around">
-                <Text className="text-headlg   text-neutralWhite font-headsemibold">
+                <Text style={{maxWidth: 180}} className="text-headlg   text-neutralWhite font-headsemibold">
                   {budget.name}
                 </Text>
                 <Text

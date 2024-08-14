@@ -22,6 +22,7 @@ import { router } from "expo-router";
 import AlertGlobal from "../AlertGlobal";
 import { useUserContext } from "@/app/context/UserDataContext";
 import { getCategories } from "@/app/api/categoryAPI";
+import Loading from "../Loading";
 export default function Expenses() {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -46,9 +47,8 @@ export default function Expenses() {
     categoryName: "",
   });
   const handleAddExpenses = async () => {
-    console.log("respnse agregar gasto: ", newEarn);
     const response = await movementAddExpenses(newEarn);
-    console.log("#####################response agregar gasto: ", response);
+    console.log("REPSONSE DE AGREGAR GASTO: ", response);
     
     if (response.amount == newEarn.amount) {
       setModalInfo({
@@ -119,7 +119,7 @@ export default function Expenses() {
         <TextInput
           onChangeText={(text) => setNewEarn({ ...newEarn, amount: +text })}
           placeholder="Ingrese la cantidad"
-          keyboardType="number-pad"
+          keyboardType="numbers-and-punctuation"
           className="bg-neutralWhite rounded-full py-[8px] text-headxl px-[16px] w-[100%]"
         />
       </LinearGradient>
@@ -240,12 +240,15 @@ export default function Expenses() {
         </View>
       </TouchableOpacity> */}
       <GeneralButton onPress={handleAddExpenses}>
-        <Text
-          style={{ marginHorizontal: "auto" }}
+        {
+          loading ? <Loading /> : <Text
           className="text-headxl text-neutralWhite text-center font-headsemibold py-[8px]  "
-        >
-          GUARDAR
-        </Text>
+            style={{ marginHorizontal: "auto" }}
+          >
+            GUARDAR
+          </Text>
+        }
+        
       </GeneralButton>
 
       <View className="bg-primaryPink">
@@ -309,6 +312,7 @@ export default function Expenses() {
         p={modalInfo.p}
         modalVisible={modalInfo}
         setModalVisible={setModalInfo}
+        setLoading={setLoading}
       />
     </View>
   );

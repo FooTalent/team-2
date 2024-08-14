@@ -1,5 +1,9 @@
 import { Feather, MaterialIcons } from "@expo/vector-icons";
-import { BottomSheetBackdrop, BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetScrollView,
+} from "@gorhom/bottom-sheet";
 import dayjs from "dayjs";
 import { LinearGradient } from "expo-linear-gradient";
 import React, {
@@ -23,7 +27,7 @@ import Loading from "../Loading";
 import { router } from "expo-router";
 import { useUserContext } from "@/app/context/UserDataContext";
 export default function Earnings() {
-  const {user} = useUserContext();
+  const { user } = useUserContext();
   const snapPoints = useMemo(() => ["50%"], []);
   const [loading, setLoading] = useState(false);
   const [modalInfo, setModalInfo] = useState({
@@ -44,10 +48,20 @@ export default function Earnings() {
     setNewEarn({ ...newEarn, origin: name });
   };
   const handleAddEarn = async () => {
-    console.log("entra por acaaa");
-    
+    if (newEarn.amount < 1) {
+      setModalInfo({
+        head: "Ha ocurrido un error",
+        p: "El monto ingresado es invalido",
+        err: true,
+        modal: true,
+      });
+      setLoading(false);
+      return;
+    }
+    console.log("NEW FORM EARN", newEarn);
     const response = await movementAddEarn(newEarn);
-    console.log("RESPONSE DE AGREGAR MOVIENTO GANAR: ", response);
+    console.log("RESPNSE DE AGREGAR DINERO", response);
+
     if (response.amount == newEarn.amount) {
       setModalInfo({
         head: "Ingreso agregado",
@@ -57,7 +71,7 @@ export default function Earnings() {
       });
       setLoading(false);
       router.replace("(tabs)");
-    }else{
+    } else {
       setModalInfo({
         head: "Ha ocurrido un error",
         p: "El ingreso no se ha agregado correctamente",
@@ -95,15 +109,15 @@ export default function Earnings() {
     },
     {
       id: 4,
-      name: "Inversiones",
+      name: "Apuestas",
     },
     {
       id: 5,
-      name: "Inversiones",
+      name: "Otros",
     },
     {
       id: 6,
-      name: "Inversiones",
+      name: "Banco",
     },
 
     {
@@ -131,7 +145,7 @@ export default function Earnings() {
           <TextInput
             onChangeText={(text) => setNewEarn({ ...newEarn, amount: +text })}
             placeholder="Ingrese la cantidad"
-            keyboardType="number-pad"
+            keyboardType="numbers-and-punctuation"
             className="bg-neutralWhite rounded-full py-[8px] text-headxl px-[16px] w-[100%]"
           />
         </LinearGradient>
@@ -215,8 +229,7 @@ export default function Earnings() {
             {dayjs(newEarn.date).format("D [de] MMMM, YYYY")}
           </Text>
           <TouchableOpacity
-                  disabled={dayjs(newEarn.date).isSame(dayjs(), "day")}
-
+            disabled={dayjs(newEarn.date).isSame(dayjs(), "day")}
             style={{
               paddingLeft: 25,
             }}
@@ -281,48 +294,48 @@ export default function Earnings() {
             handleIndicatorStyle={{ backgroundColor: "#79747E" }}
             snapPoints={snapPoints}
           >
-                   <BottomSheetScrollView >
-
+            <BottomSheetScrollView>
               <View className=" flex flex-row flex-wrap  gap-5">
                 {categories.map((category, index) => (
-                 <View key={category.id} className="flex-col items-center">
-                 <TouchableOpacity
-                   onPress={() => handleOriginPress(category.name)}
-                   style={{
-                     paddingVertical: 5,
-                     paddingHorizontal: 12,
-                     marginVertical: 15,
-                     borderRadius: 10,
-                     backgroundColor: "#290B57",
-                     borderColor: newEarn.origin == category.name ? "#6EFF8E" : "",
-                     borderWidth: newEarn.origin == category.name ? 1 : 0,
-                   }}
-                 >
-                   <View style={{ width: "auto" }}>
-                     <Text
-                       className={`text-neutralWhite rounded-[99px] text-headxl text-center  px-4 py-2 ${
-                         newEarn.origin == category.name
-                           ? "bg-primaryLighterGreen text-primaryBackground"
-                           : "bg-[#090215]"
-                       }`}
-                     >
-                       {category.name.slice(0, 1).toUpperCase()}
-                     </Text>
-                   </View>
-                   <Text
-                     className={`text-headmd py-2 text-neutralWhite ml-2 text-center ${
-                       newEarn.origin == category.name
-                         ? "text-bg-primaryLighterGreen"
-                         : "text-neutralWhite"
-                     }`}
-                   >
-                     {category.name}
-                   </Text>
-                 </TouchableOpacity>
-               </View>
+                  <View key={category.id} className="flex-col items-center">
+                    <TouchableOpacity
+                      onPress={() => handleOriginPress(category.name)}
+                      style={{
+                        paddingVertical: 5,
+                        paddingHorizontal: 12,
+                        marginVertical: 15,
+                        borderRadius: 10,
+                        backgroundColor: "#290B57",
+                        borderColor:
+                          newEarn.origin == category.name ? "#6EFF8E" : "",
+                        borderWidth: newEarn.origin == category.name ? 1 : 0,
+                      }}
+                    >
+                      <View style={{ width: "auto" }}>
+                        <Text
+                          className={`text-neutralWhite rounded-[99px] text-headxl text-center  px-4 py-2 ${
+                            newEarn.origin == category.name
+                              ? "bg-primaryLighterGreen text-primaryBackground"
+                              : "bg-[#090215]"
+                          }`}
+                        >
+                          {category.name.slice(0, 1).toUpperCase()}
+                        </Text>
+                      </View>
+                      <Text
+                        className={`text-headmd py-2 text-neutralWhite ml-2 text-center ${
+                          newEarn.origin == category.name
+                            ? "text-bg-primaryLighterGreen"
+                            : "text-neutralWhite"
+                        }`}
+                      >
+                        {category.name}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 ))}
               </View>
-            </          BottomSheetScrollView >
+            </BottomSheetScrollView>
           </BottomSheetModal>
         </View>
       </View>
@@ -332,6 +345,7 @@ export default function Earnings() {
         p={modalInfo.p}
         modalVisible={modalInfo}
         setModalVisible={setModalInfo}
+        setLoading={setLoading}
       />
     </>
   );

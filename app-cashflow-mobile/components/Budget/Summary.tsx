@@ -39,13 +39,11 @@ function Summary({ budget }: any) {
         date: dayjs(item.date).format("D MMMM"),
         value: item.amount,
       }));
-      console.log("data11", data11);
 
       setExpensesInfo({ ...expensesInfo, data: data11 });
     }
   }, []);
   const handleOpenModal = () => {
-    console.log("open modal");
   };
   return (
     <View

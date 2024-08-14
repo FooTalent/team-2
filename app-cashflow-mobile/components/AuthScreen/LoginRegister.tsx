@@ -35,7 +35,6 @@ export const LoginRegister = ({
     setFormData({ ...formData, [name]: value });
   };
   useEffect(()=>{
-    console.log("loading cargando");
     
   },[loading])
   const handleGoBack = () => {

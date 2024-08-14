@@ -87,8 +87,10 @@ export default function Movements({ budget }: any) {
           maxHeight: 460,
         }}
       >
-        {expenses.map((movement: any) => (
-          <View className="border border-[#290B57] rounded-[9px] flex-row  items-center mt-[16px] px-[8px] py-[10px]">
+        {expenses.map((movement: any, index:any) => (
+          <View 
+          key={index}
+          className="border border-[#290B57] rounded-[9px] flex-row  items-center mt-[16px] px-[8px] py-[10px]">
             <View>
               <View className="bg-[#290B57] w-[50px] h-[50px] rounded-full flex items-center justify-center">
                 <Text className="text-neutralWhite text-headxxl">

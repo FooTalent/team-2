@@ -17,7 +17,6 @@ export default function BudgetComponent() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const getInfoBudget = async () => {
     const response = await getBudget(+id!);
-    console.log("BUDGET OBETNIDOOOO POR ID: ", response);
     
     setBudget(response);
   };

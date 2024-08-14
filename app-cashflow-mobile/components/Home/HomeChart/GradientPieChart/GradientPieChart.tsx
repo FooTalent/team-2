@@ -23,7 +23,6 @@ export const GradientPieChart = ({ moneyId }: any) => {
       if (moneyId == undefined) return;
       
       const res = await new MoneyService().getMoney(moneyId);
-      console.log("res de mney id_ ",res);
       setUser({...user, money: res});
       let expenses = res.expenses.length == 0 ? 1 : res.expenses.reduce((current: any, acc: any) => {
         return current + acc.amount;
@@ -49,7 +48,6 @@ export const GradientPieChart = ({ moneyId }: any) => {
 
   useEffect(() => {
     if (moneyId) {
-      console.log("money id: ", moneyId);
       
       getMoney();
     }

@@ -9,7 +9,6 @@ export const movementAddEarn = async (movement: any) => {
       `${api}/movimientos/nuevo-ingreso`,
       movement
     );
-    console.log("REPONSE DE AGREGAR INGRESO----: ", response.data);
     
     return response.data;
   
@@ -17,13 +16,11 @@ export const movementAddEarn = async (movement: any) => {
 
 export const movementAddExpenses = async (movement: any) => {
   try {
-    console.log("MOVIMIENTO DE ENTRADA FORM: ", movement);
     
     const response = await axios.post(
       `${api}/movimientos/nuevo-gasto`,
       movement
     );
-    console.log("REPONSE DE AGREGAR GASTO: ", response.data);
     
     return response.data;
   } catch (error: any) {
@@ -32,6 +29,8 @@ export const movementAddExpenses = async (movement: any) => {
 };
 export const addNewBudget = async (budget: any) => {
   const response = await axios.post(`${api}/presupuesto/create`, budget);
+  console.log("111AGREGAR REPUESTO RESPONSE: ", response);
+  
   return response.data;
 };
 export const getBudgets = async (id: number) => {

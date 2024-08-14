@@ -33,8 +33,6 @@ export default function HomeScreen() {
     const onboardingComplete = await AsyncStorage.getItem(
       "onboardingComplete"
     );
-    console.log("onboardingComplete??? INDEX", onboardingComplete);
-    console.log("USER??? INDEX", user);
     
     if (onboardingComplete == "true") {
       if (user == null) {

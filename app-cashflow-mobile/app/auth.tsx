@@ -53,10 +53,8 @@ const Auth = () => {
       setLoading(false);
     } else {
       const res = await register_user(formData);
-      console.log("RESPONSE: ", res.status == 400);
 
       if (res.status == 400) {
-        console.log("ENTRA A ERROR");
 
         setModalInfo({
           err: true,
@@ -76,7 +74,6 @@ const Auth = () => {
         setShow("login");
       }
     }
-    console.log("sale por aca");
     
     setLoading(false);
   };
@@ -89,8 +86,8 @@ const Auth = () => {
     };
     /* setLoading(true); */
     const res = await new AuthService().login(loginUser);
-
-    console.log("RESPONSE: ", res);
+    console.log("RESPONSE PRIMERO: ", res);
+    
     if (res.StatusCode == 401) {
       setModalInfo({
         err: true,
@@ -102,7 +99,12 @@ const Auth = () => {
     } else {
       const quantity = await AsyncStorage.getItem("quantity");
       const onboarding = await AsyncStorage.getItem("onboardingComplete");
-
+      console.log("FORM ADD EARN QUANTITI: ", {
+        date: new Date().toISOString(),
+        amount: +quantity!,
+        moneyId: res.moneyId,
+      } );
+      
       if (quantity != "0" && quantity != null && onboarding == "true") {
         const form = {
           date: new Date().toISOString(),
@@ -110,12 +112,8 @@ const Auth = () => {
           moneyId: res.moneyId,
         };
         const response = await movementAddEarn(form);
-        console.log("formmmmm: ", form);
-
-        console.log(
-          "RESPONSE DE AGREGR PLATA AL INICIO##############################: ",
-          response
-        );
+        console.log("RESPONSE ADD EARN QUNATITII: ", response);
+        
 
         await AsyncStorage.removeItem("quantity");
       }
