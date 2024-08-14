@@ -6,21 +6,106 @@ import {
   StyleSheet,
   Switch,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ThemedView } from "@/components/ThemedView";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import GeneralButton from "@/components/GeneralButton";
 import SelectDropdown from "react-native-select-dropdown";
+import { addNewBudget } from "./api/moneyAPI";
+import { getCategories } from "./api/categoryAPI";
+import { useUserContext } from "./context/UserDataContext";
+import AlertGlobal from "@/components/AlertGlobal";
+import Loading from "@/components/Loading";
 
 export default function AddBudget() {
-  const emojisWithIcons = [
-    { title: "Semana" },
-    { title: "Mes" },
-    { title: "Anual" },
-  ];
+  const { user } = useUserContext();
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [firstTime, setFirstTime] = useState<boolean>(true);
+  const getCategoriess = async () => {
+    const response = await getCategories();
+    setCategories(response);
+  };
+  useEffect(() => {
+    getCategoriess();
+  }, []);
+  const [formNewBudget, setFormNewBudget] = useState({
+    name: "",
+    amount: 0,
+    moneyId: user.moneyId,
+    createdDate: new Date().toISOString(),
+    categoryName: "",
+  });
+  const [modalInfo, setModalInfo] = useState({
+    head: "",
+    p: "",
+    err: false,
+    modal: false,
+  });
+  const handleAddNewBudget = async () => {
+    if (formNewBudget.amount < 1) {
+      setModalInfo({
+        head: "Error al agregar presupuesto",
+        p: "El monto del presupuesto debe ser mayor a 0",
+        err: true,
+        modal: true,
+      });
+      setLoading(false);
+      return;
+    }
+    if (formNewBudget.name.length < 1) {
+      setModalInfo({
+        head: "Error al agregar presupuesto",
+        p: "El nombre del presupuesto no puede estar vacio",
+        err: true,
+        modal: true,
+      });
+      setLoading(false);
+      return;
+    }
+    if (formNewBudget.categoryName.length < 1) {
+      setModalInfo({
+        head: "Error al agregar presupuesto",
+        p: "Debes seleccionar una categoria",
+        err: true,
+        modal: true,
+      });
+      setLoading(false);
+      return;
+    }
+    const response = await addNewBudget(formNewBudget)
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        return err.response;
+      });
+    console.log("RESPONSE DE AGREGAR PRESUPUESTO. ", response);
+
+    if (response.amount == formNewBudget.amount) {
+      setModalInfo({
+        head: "Presupuesto agregado",
+        p: "El presupuesto se ha agregado correctamente",
+        err: false,
+        modal: true,
+      });
+      setLoading(false);
+      setTimeout(() => {
+        router.replace("(tabs)");
+      }, 2000);
+    } else {
+      setModalInfo({
+        head: "Error al agregar presupuesto",
+        p: "Ha ocurrido un error al agregar el presupuesto",
+        err: true,
+        modal: true,
+      });
+      setLoading(false);
+    }
+    setLoading(false);
+  };
   const handleGoBack = () => {
     if (router.canGoBack()) {
       router.back();
@@ -36,19 +121,20 @@ export default function AddBudget() {
     <View
       style={{
         flex: 1,
-        marginHorizontal: 16,
+        paddingHorizontal: 16,
         paddingVertical: 40,
+        backgroundColor: "#0A0219",
       }}
     >
       <ThemedView className="flex flex-row justify-between">
         <View className="  flex flex-row gap-[16px]">
           <TouchableOpacity
             onPress={handleGoBack}
-            style={{ backgroundColor: "#ABFEBD", borderRadius: 100 }}
+            style={{ backgroundColor: "#290B57", borderRadius: 100 }}
           >
             <MaterialIcons
               name="keyboard-arrow-left"
-              color="#3B1575"
+              color="#7d32ec"
               size={44}
               className="text-[24px]"
             />
@@ -64,6 +150,9 @@ export default function AddBudget() {
             Nombre del presupuesto
           </Text>
           <TextInput
+            onChangeText={(text) =>
+              setFormNewBudget({ ...formNewBudget, name: text })
+            }
             placeholder="Ropa"
             className="p-[16px] rounded-[24px] text-headlg bg-neutralWhite text-black"
           />
@@ -73,29 +162,33 @@ export default function AddBudget() {
             Dinero del presupuesto
           </Text>
           <TextInput
-            placeholder="Ropa"
+            keyboardType="numeric"
+            onChangeText={(text) =>
+              setFormNewBudget({ ...formNewBudget, amount: +text })
+            }
+            placeholder="1000"
             className="p-[16px] rounded-[24px] text-headlg bg-neutralWhite text-black"
           />
         </View>
         <View>
           <Text className="text-neutralWhite text-headlg mb-3">Categoria</Text>
-          <TextInput
-            placeholder="Ropa"
-            className="p-[16px] rounded-[24px] text-headlg bg-neutralWhite text-black"
-          />
-        </View>
-        <View>
-          <Text className="text-neutralWhite text-headlg mb-3">Periodo</Text>
           <SelectDropdown
-            data={emojisWithIcons}
+            data={categories}
             onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index);
+              setFormNewBudget({
+                ...formNewBudget,
+                categoryName: selectedItem,
+              });
             }}
             renderButton={(selectedItem, isOpened) => {
               return (
                 <View style={styles.dropdownButtonStyle}>
-                  <Text style={styles.dropdownButtonTxtStyle}>
-                    {(selectedItem && selectedItem.title) || "Select your mood"}
+                  <Text
+                    style={styles.dropdownButtonTxtStyle}
+                    className="text-neutralLighterGray"
+                  >
+                    {(selectedItem && selectedItem) ||
+                      "Selecciona una categoria"}
                   </Text>
                 </View>
               );
@@ -108,7 +201,7 @@ export default function AddBudget() {
                     ...(isSelected && { backgroundColor: "#D2D9DF" }),
                   }}
                 >
-                  <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
+                  <Text style={styles.dropdownItemTxtStyle}>{item}</Text>
                 </View>
               );
             }}
@@ -117,22 +210,46 @@ export default function AddBudget() {
           />
         </View>
       </View>
-      <Text className="text-neutralWhite text-headlg mt-10 mb-5">Notificaciones</Text>
+      <Text className="text-neutralWhite text-headlg mt-10 mb-5">
+        Notificaciones
+      </Text>
       <View className="flex flex-row items-center justify-between">
         <Text className="text-neutralLighterGray " style={{ maxWidth: "70%" }}>
           Notificar cuando supere el monto presupuestados
         </Text>
-        <Switch />
+        <Switch disabled />
       </View>
       <View className="flex flex-row items-center justify-between mb-5">
         <Text className="text-neutralLighterGray " style={{ maxWidth: "70%" }}>
           Notificar cuando se corra el riesgo de superar el presupuesto
         </Text>
-        <Switch />
+        <Switch disabled />
       </View>
-      <GeneralButton row={false}>
-        <Text className="text-center text-neutralWhite text-headxl font-headsemibold" style={{marginHorizontal: "auto"}}>GUARDAR</Text>
+      <GeneralButton
+        onPress={async () => {
+          setLoading(true), await handleAddNewBudget();
+        }}
+        row={false}
+      >
+        {loading ? (
+          <Loading />
+        ) : (
+          <Text
+            className="text-center text-neutralWhite text-headxl font-headsemibold"
+            style={{ marginHorizontal: "auto" }}
+          >
+            GUARDAR
+          </Text>
+        )}
       </GeneralButton>
+      <AlertGlobal
+        head={modalInfo.head}
+        err={modalInfo.err}
+        p={modalInfo.p}
+        modalVisible={modalInfo}
+        setModalVisible={setModalInfo}
+        setLoading={setLoading}
+      />
     </View>
   );
 }

@@ -4,61 +4,63 @@ import {
   View,
   TouchableOpacity,
   Text,
-  Pressable,
 } from "react-native";
 
-import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { Feather, MaterialIcons, Octicons } from "@expo/vector-icons";
-import { PieChart } from "react-native-gifted-charts";
-import GradientChartHome from "@/components/Home/GradientChartHome";
-import { Link, router } from "expo-router";
+import { Feather } from "@expo/vector-icons";
+import {
+  Link,
+  router,
+} from "expo-router";
 import HomeChart from "@/components/Home/HomeChart/HomeChart";
-import GeneralButton from "@/components/GeneralButton";
-import { useEffect, useState } from "react";
 import { useUserContext } from "../context/UserDataContext";
-import { getMoneyUser } from "../api/moneyAPI";
-import { User } from "@/types/user";
+import Loading from "@/components/Loading";
+import useExtendedRouter from "@/hooks/useExtendedRouter";
+import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen() {
   {
     /* <SimpleLineIcons name="home" size={24} color="black" /> */
   }
-  const [dataAuth, setDataAuth] = useState<{
-    token: string | null;
-    user: User | null;
-    moneyId: number  | null
-  }>({
-    token: null,
-    user: null,
-    moneyId: null
-  });
+  const { user } = useUserContext();
+  const router = useExtendedRouter();
   
   const getUser = async () => {
-    const authInfoString = await AsyncStorage.getItem("auth");
-    if (!authInfoString) {
-      router.replace("auth");
-      return;
+    const onboardingComplete = await AsyncStorage.getItem(
+      "onboardingComplete"
+    );
+    
+    if (onboardingComplete == "true") {
+      if (user == null) {
+        router.push("auth");
+      }
+    }else{
+      router.push("onboarding");
     }
-
-    const authInfo = JSON.parse(authInfoString);
-    setDataAuth({
-      token: authInfo.token,
-      user: authInfo.user,
-      moneyId: authInfo.moneyId
-    });
-  };
-
+    return user;
+  }
   useEffect(() => {
-    getUser();
-  }, []);
+    if (router.isReady) {
+      getUser()      
+    }
+  }, [router]);
 
-  return (
+  /* useEffect(()=>{
+    
+    if (user === null) {
+      console.log("user", user);
+      router.push("auth");
+    }else{
+    }
+  },[]) */
+
+  return user == null ? (
+    <Loading />
+  ) : (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
       headerImage={
@@ -73,7 +75,7 @@ export default function HomeScreen() {
           <Image
             style={{ width: 45.28, height: 45.28, borderRadius: 100 }}
             source={{
-              uri: "https://reactnative.dev/img/tiny_logo.png",
+              uri: "https://as1.ftcdn.net/v2/jpg/03/39/45/96/1000_F_339459697_XAFacNQmwnvJRqe1Fe9VOptPWMUxlZP8.jpg",
             }}
           />
           <Text className=" font-headlight text-headxxl text-neutralWhite">
@@ -81,23 +83,23 @@ export default function HomeScreen() {
           </Text>
 
           <Text className=" font-headsemibold text-headxxl text-neutralWhite">
-            {dataAuth.user?.userName}!
+            {user.user.userName}
           </Text>
         </View>
         <View className="flex bg-[#290B57] rounded-full border-2">
-          <TouchableOpacity style={{ marginLeft: "auto" }}>
+          <TouchableOpacity disabled style={{ marginLeft: "auto" }}>
             <Feather
               className="p-3 font  rounded-full"
               name="bell"
               size={24}
-              color="#954fff"
+              color="gray"
             />
           </TouchableOpacity>
         </View>
         {/* <HelloWave /> */}
       </ThemedView>
       <ThemedView>
-        <HomeChart moneyId={dataAuth.moneyId} />
+        <HomeChart moneyId={user.moneyId} />
       </ThemedView>
       <ThemedView className="gap-y-3">
         <TouchableOpacity onPress={() => router.push("addMovement")}>
@@ -140,7 +142,7 @@ export default function HomeScreen() {
           </LinearGradient>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push("addMovement")}>
+        <TouchableOpacity disabled onPress={() => router.push("addMovement")}>
           <LinearGradient
             style={{
               paddingHorizontal: 23,
@@ -160,7 +162,7 @@ export default function HomeScreen() {
               y: 1,
             }}
           >
-            <Text className="text-headlg text-neutralWhite">VER DETALLES</Text>
+            <Text className="text-headlg text-neutralLightGray ">VER DETALLES</Text>
             <View
               className="justify-center"
               style={{
@@ -172,7 +174,7 @@ export default function HomeScreen() {
                 size={24}
                 className=" "
                 name="arrow-down-left"
-                color="white"
+                color="gray"
               />
             </View>
           </LinearGradient>

@@ -7,7 +7,6 @@ export type Ref=BottomSheetModal
 const BottomSheetCutom = forwardRef<Ref>((props, ref)=>{
   const snapPoints = useMemo(() => ["25%", "50%", "70%"], []);
   const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
   }, []);
  /*  const handleOpenBottomSheet = useCallback(() => {
     bottomSheetRef.current?.expand();

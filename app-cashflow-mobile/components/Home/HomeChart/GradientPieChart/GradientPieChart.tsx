@@ -1,11 +1,12 @@
 import { View, Text, StyleSheet, Dimensions } from "react-native";
-import { Defs, LinearGradient, Stop, G, Path } from "react-native-svg";
 import { useEffect, useState } from "react";
 import { PieChartI } from "@/types";
 import { PieChart } from "react-native-gifted-charts";
 import { MoneyService } from "@/services/MoneyService";
+import { useUserContext } from "@/app/context/UserDataContext";
 
 export const GradientPieChart = ({ moneyId }: any) => {
+  const {user,setUser} = useUserContext();
   const [dataOperations, setDataOperations] = useState<PieChartI>({
     income: null,
     bills: null,
@@ -19,13 +20,14 @@ export const GradientPieChart = ({ moneyId }: any) => {
 
   const getMoney = async () => {
     try {
-      if (!moneyId) return;
+      if (moneyId == undefined) return;
       
       const res = await new MoneyService().getMoney(moneyId);
-      let expenses = res.expenses.reduce((current: any, acc: any) => {
+      setUser({...user, money: res});
+      let expenses = res.expenses.length == 0 ? 1 : res.expenses.reduce((current: any, acc: any) => {
         return current + acc.amount;
       }, 0);
-      let incomes = res.incomes.reduce((current: any, acc: any) => {
+      let incomes = res.incomes.length == 0 ? 1 : res.incomes.reduce((current: any, acc: any) => {
         return current + acc.amount;
       }, 0);
 
@@ -46,6 +48,7 @@ export const GradientPieChart = ({ moneyId }: any) => {
 
   useEffect(() => {
     if (moneyId) {
+      
       getMoney();
     }
   }, [moneyId]);

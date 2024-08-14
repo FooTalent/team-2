@@ -7,8 +7,16 @@ import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import GeneralButton from "@/components/GeneralButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUserContext } from "../context/UserDataContext";
 
 const More = () => {
+  const {setUser} = useUserContext();
+  const handleSignOut = async() =>{
+    
+    await AsyncStorage.removeItem("auth");
+    setUser(null);
+    router.push("auth");
+  }
   return (
     <View
       style={{
@@ -24,11 +32,11 @@ const More = () => {
         <ThemedView className="flex flex-row justify-between">
           <View className="  flex flex-row gap-[16px]">
             <TouchableOpacity
-              style={{ backgroundColor: "#ABFEBD", borderRadius: 100 }}
+              style={{ backgroundColor: "#290B57", borderRadius: 100 }}
             >
               <MaterialIcons
                 name="keyboard-arrow-left"
-                color="#3B1575"
+                color="#7d32ec"
                 size={44}
                 className="text-[24px]"
               />
@@ -37,13 +45,8 @@ const More = () => {
               Más
             </Text>
           </View>
-          <TouchableOpacity
-            style={{ backgroundColor: "#ABFEBD", borderRadius: 100 }}
-          >
-            <Feather color="#3B1575" size={25} className="p-3" name="bell" />
-          </TouchableOpacity>
         </ThemedView>
-        <TouchableOpacity onPress={() => router.push("miprofile")}>
+        <TouchableOpacity disabled onPress={() => router.push("miprofile")}>
           <LinearGradient
             style={{
               paddingHorizontal: 23,
@@ -57,7 +60,7 @@ const More = () => {
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
           >
-            <Text className="text-pxl  text-neutralWhite font-headsemibold">
+            <Text className="text-pxl  text-neutralLighterGray font-headsemibold">
               MI PERFIL
             </Text>
             <View
@@ -69,14 +72,14 @@ const More = () => {
             >
               <MaterialIcons
                 name="keyboard-arrow-left"
-                color="white"
+                color="gray"
                 size={44}
                 className="text-[24px] rotate-180"
               />
             </View>
           </LinearGradient>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity disabled>
           <LinearGradient
             style={{
               paddingHorizontal: 23,
@@ -90,7 +93,7 @@ const More = () => {
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
           >
-            <Text className="text-pxl uppercase text-neutralWhite font-headsemibold">
+            <Text className="text-pxl uppercase text-neutralLighterGray font-headsemibold">
               ajustes de notificación
             </Text>
             <View
@@ -102,19 +105,14 @@ const More = () => {
             >
               <MaterialIcons
                 name="keyboard-arrow-left"
-                color="white"
+                color="gray"
                 size={44}
                 className="text-[24px] rotate-180"
               />
             </View>
           </LinearGradient>
         </TouchableOpacity>
-        <GeneralButton>
-          <Text className="text-pxl uppercase text-neutralWhite font-headsemibold">
-            Ayude y soporte
-          </Text>
-        </GeneralButton>
-        <TouchableOpacity>
+        <TouchableOpacity disabled>
           <LinearGradient
             style={{
               paddingHorizontal: 23,
@@ -128,7 +126,7 @@ const More = () => {
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
           >
-            <Text className="text-pxl uppercase text-neutralWhite font-headsemibold">
+            <Text className="text-pxl uppercase text-neutralLighterGray font-headsemibold">
               términos y políticas
             </Text>
             <View
@@ -140,7 +138,7 @@ const More = () => {
             >
               <MaterialIcons
                 name="keyboard-arrow-left"
-                color="white"
+                color="gray"
                 size={44}
                 className="text-[24px] rotate-180"
               />
@@ -149,20 +147,20 @@ const More = () => {
         </TouchableOpacity>
       </View>
       <TouchableOpacity
+          onPress={handleSignOut}
         style={{
           display: "flex",
           flexDirection: "row",
+          alignItems: "center",
           borderBottomColor: "#7AED70",
           borderBottomWidth: 1,
           width: 132,
           marginHorizontal: "auto",
         }}
       >
-        <Text onPress={async () => 
-          {
-            await AsyncStorage.removeItem('auth');
-            router.replace('auth')
-          }} className="text-plg align-middle text-[#7AED70] uppercase  font-headsemibold">
+        <Text
+          className="text-plg align-middle text-[#7AED70] uppercase  font-headsemibold"
+        >
           Cerrar Sesion
         </Text>
         <View

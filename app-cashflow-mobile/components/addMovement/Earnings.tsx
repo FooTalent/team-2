@@ -1,5 +1,9 @@
 import { Feather, MaterialIcons } from "@expo/vector-icons";
-import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetScrollView,
+} from "@gorhom/bottom-sheet";
 import dayjs from "dayjs";
 import { LinearGradient } from "expo-linear-gradient";
 import React, {
@@ -17,16 +21,65 @@ import {
   View,
 } from "react-native";
 import GeneralButton from "../GeneralButton";
+import { movementAddEarn } from "@/app/api/moneyAPI";
+import AlertGlobal from "../AlertGlobal";
+import Loading from "../Loading";
+import { router } from "expo-router";
+import { useUserContext } from "@/app/context/UserDataContext";
 export default function Earnings() {
+  const { user } = useUserContext();
   const snapPoints = useMemo(() => ["50%"], []);
+  const [loading, setLoading] = useState(false);
+  const [modalInfo, setModalInfo] = useState({
+    head: "",
+    p: "",
+    err: false,
+    modal: false,
+  });
   const [newEarn, setNewEarn] = useState({
     amount: 0,
+    date: new Date().toISOString(),
+    moneyId: user.money.id,
     origin: "",
-    date: dayjs().format("d [de] MMMM, DDDD"),
   });
+
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const handleOriginPress = (name: string) => {
     setNewEarn({ ...newEarn, origin: name });
+  };
+  const handleAddEarn = async () => {
+    if (newEarn.amount < 1) {
+      setModalInfo({
+        head: "Ha ocurrido un error",
+        p: "El monto ingresado es invalido",
+        err: true,
+        modal: true,
+      });
+      setLoading(false);
+      return;
+    }
+    console.log("NEW FORM EARN", newEarn);
+    const response = await movementAddEarn(newEarn);
+    console.log("RESPNSE DE AGREGAR DINERO", response);
+
+    if (response.amount == newEarn.amount) {
+      setModalInfo({
+        head: "Ingreso agregado",
+        p: "El ingreso se ha agregado correctamente",
+        err: false,
+        modal: true,
+      });
+      setLoading(false);
+      router.replace("(tabs)");
+    } else {
+      setModalInfo({
+        head: "Ha ocurrido un error",
+        p: "El ingreso no se ha agregado correctamente",
+        err: true,
+        modal: true,
+      });
+      setLoading(false);
+    }
   };
   const renderBackdrop = useCallback(
     (props: any) => (
@@ -56,15 +109,15 @@ export default function Earnings() {
     },
     {
       id: 4,
-      name: "Inversiones",
+      name: "Apuestas",
     },
     {
       id: 5,
-      name: "Inversiones",
+      name: "Otros",
     },
     {
       id: 6,
-      name: "Inversiones",
+      name: "Banco",
     },
 
     {
@@ -90,8 +143,9 @@ export default function Earnings() {
           }}
         >
           <TextInput
-            placeholder="10000"
-            keyboardType="number-pad"
+            onChangeText={(text) => setNewEarn({ ...newEarn, amount: +text })}
+            placeholder="Ingrese la cantidad"
+            keyboardType="numbers-and-punctuation"
             className="bg-neutralWhite rounded-full py-[8px] text-headxl px-[16px] w-[100%]"
           />
         </LinearGradient>
@@ -158,13 +212,34 @@ export default function Earnings() {
         py-3 px-5
         rounded-[99px]  mt-[28px] mb-[28px] items-center justify-between"
         >
-          <TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              paddingRight: 25,
+            }}
+            onPress={() =>
+              setNewEarn({
+                ...newEarn,
+                date: dayjs(newEarn.date).subtract(1, "day").toISOString(),
+              })
+            }
+          >
             <MaterialIcons name="arrow-back-ios" size={24} color="white" />
           </TouchableOpacity>
           <Text className="text-headxl font-psemibold text-neutralWhite">
-            {dayjs().format("d [de] MMMM, DDDD")}
+            {dayjs(newEarn.date).format("D [de] MMMM, YYYY")}
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            disabled={dayjs(newEarn.date).isSame(dayjs(), "day")}
+            style={{
+              paddingLeft: 25,
+            }}
+            onPress={() =>
+              setNewEarn({
+                ...newEarn,
+                date: dayjs(newEarn.date).add(1, "day").toISOString(),
+              })
+            }
+          >
             <MaterialIcons
               name="arrow-back-ios"
               className="rotate-180 "
@@ -173,7 +248,7 @@ export default function Earnings() {
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             marginVertical: 15,
             borderRadius: 10,
@@ -190,15 +265,23 @@ export default function Earnings() {
               Abrir calendario
             </Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <GeneralButton /* onPress={handleCloseBottomSheet} */>
-          <Text
-            style={{ marginHorizontal: "auto" }}
-            className="text-headxl text-neutralWhite text-center font-headsemibold py-[8px]  "
-          >
-            GUARDAR
-          </Text>
+        <GeneralButton
+          onPress={() => {
+            handleAddEarn(), setLoading(true);
+          }}
+        >
+          {loading ? (
+            <Loading />
+          ) : (
+            <Text
+              style={{ marginHorizontal: "auto" }}
+              className="text-headxl text-neutralWhite text-center font-headsemibold py-[8px]  "
+            >
+              GUARDAR
+            </Text>
+          )}
         </GeneralButton>
 
         <View className="bg-primaryPink">
@@ -207,44 +290,63 @@ export default function Earnings() {
             ref={bottomSheetRef}
             index={0}
             backdropComponent={renderBackdrop}
-            backgroundStyle={{ backgroundColor: "#480C36" }}
+            backgroundStyle={{ backgroundColor: "#0A0219" }}
             handleIndicatorStyle={{ backgroundColor: "#79747E" }}
             snapPoints={snapPoints}
           >
-            <LinearGradient
-              colors={["#480C36", "#0E4117"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 0, y: 1 }}
-              style={{ flex: 1 }}
-            >
+            <BottomSheetScrollView>
               <View className=" flex flex-row flex-wrap  gap-5">
                 {categories.map((category, index) => (
-                  <View
-                    key={category.id}
-                    className="w-[80px]  flex-col items-center"
-                  >
+                  <View key={category.id} className="flex-col items-center">
                     <TouchableOpacity
-                      onPress={() => bottomSheetRef.current?.close()}
+                      onPress={() => handleOriginPress(category.name)}
                       style={{
-                        paddingVertical: 4,
-                        paddingHorizontal: 20,
+                        paddingVertical: 5,
+                        paddingHorizontal: 12,
                         marginVertical: 15,
-                        borderRadius: 40,
-                        backgroundColor: "#abfebd",
+                        borderRadius: 10,
+                        backgroundColor: "#290B57",
+                        borderColor:
+                          newEarn.origin == category.name ? "#6EFF8E" : "",
+                        borderWidth: newEarn.origin == category.name ? 1 : 0,
                       }}
                     >
-                      <Feather name="plus-circle" size={24} color="#ff00b8" />
+                      <View style={{ width: "auto" }}>
+                        <Text
+                          className={`text-neutralWhite rounded-[99px] text-headxl text-center  px-4 py-2 ${
+                            newEarn.origin == category.name
+                              ? "bg-primaryLighterGreen text-primaryBackground"
+                              : "bg-[#090215]"
+                          }`}
+                        >
+                          {category.name.slice(0, 1).toUpperCase()}
+                        </Text>
+                      </View>
+                      <Text
+                        className={`text-headmd py-2 text-neutralWhite ml-2 text-center ${
+                          newEarn.origin == category.name
+                            ? "text-bg-primaryLighterGreen"
+                            : "text-neutralWhite"
+                        }`}
+                      >
+                        {category.name}
+                      </Text>
                     </TouchableOpacity>
-                    <Text className="text-headmd text-neutralWhite ml-2">
-                      {category.name}
-                    </Text>
                   </View>
                 ))}
               </View>
-            </LinearGradient>
+            </BottomSheetScrollView>
           </BottomSheetModal>
         </View>
       </View>
+      <AlertGlobal
+        head={modalInfo.head}
+        err={modalInfo.err}
+        p={modalInfo.p}
+        modalVisible={modalInfo}
+        setModalVisible={setModalInfo}
+        setLoading={setLoading}
+      />
     </>
   );
 }

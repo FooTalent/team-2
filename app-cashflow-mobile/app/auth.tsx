@@ -17,72 +17,110 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { AuthService } from "@/services/AuthService";
 import { RegisterUserDto } from "@/types/dto/register-user.dto";
+import AlertGlobal from "@/components/AlertGlobal";
+import { register_user } from "./api/authAPI";
+import { useUserContext } from "./context/UserDataContext";
+import { movementAddEarn } from "./api/moneyAPI";
 
 const Auth = () => {
+  const { user, setUser } = useUserContext();
   const [show, setShow] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [modalInfo, setModalInfo] = useState({
+    head: "",
+    p: "",
+    err: false,
+    modal: false,
+  });
   const [formData, setFormData] = useState({
-    userName: null,
-    email: null,
-    password: null,
-    confirmPassword: null,
+    userName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
     terms: false,
   });
   const router = useRouter();
 
   const handleRegister = async () => {
-    try {
-      const { userName, email, password, confirmPassword, terms } = formData;
-      if (!userName || !email || !password || !confirmPassword) {
-        alert("Por favor completa todos los campos")
-        return;
+    const { userName, email, password, confirmPassword, terms } = formData;
+    if (password != confirmPassword || !terms) {
+      setModalInfo({
+        err: true,
+        head: "Ha ocurrido un error",
+        p: "Las contraseñas no coinciden o no aceptaste los terminos",
+        modal: true,
+      });
+      setLoading(false);
+    } else {
+      const res = await register_user(formData);
+
+      if (res.status == 400) {
+
+        setModalInfo({
+          err: true,
+          head: "Ha ocurrido un error",
+          p: "El correo ya esta registrado o no completaste bien los campos, la contraseña o usuario debe tener al menos 4 caracteres o no coinciden",
+          modal: true,
+        });
+        setLoading(false);
+      } else {
+        setModalInfo({
+          err: false,
+          head: "Registro exitoso",
+          p: "Usuario registrado correctamente",
+          modal: true,
+        });
+        setLoading(false);
+        setShow("login");
       }
-      if (password != confirmPassword) {
-        alert("Las contraseñas no coinciden")
-        return;
-      }
-      if (!terms) {
-        alert("Debes aceptar los terminos y condiciones")
-        return;
-      }
-      let newUser: RegisterUserDto = {
-        userName,
-        email,
-        password
-      }
-      setLoading(true)
-      await new AuthService().register(newUser)
-      setLoading(false)
-      setShow("login")
-    } catch (error) {
-      setLoading(false)
-      alert(error)
     }
+    
+    setLoading(false);
   };
 
   const handleLogin = async () => {
     const { email, password } = formData;
-
-    if (!email || !password) {
-      alert("Por favor completa todos los campos")
-      return;
-    }
     let loginUser = {
       email,
-      password
-    }
-    setLoading(true)
-    const res = await new AuthService().login(loginUser)
+      password,
+    };
+    /* setLoading(true); */
+    const res = await new AuthService().login(loginUser);
+    console.log("RESPONSE PRIMERO: ", res);
+    
+    if (res.StatusCode == 401) {
+      setModalInfo({
+        err: true,
+        head: "Ha ocurrido un error",
+        p: "Usuario o contraseña incorrectos",
+        modal: true,
+      });
+      setLoading(false);
+    } else {
+      const quantity = await AsyncStorage.getItem("quantity");
+      const onboarding = await AsyncStorage.getItem("onboardingComplete");
+      console.log("FORM ADD EARN QUANTITI: ", {
+        date: new Date().toISOString(),
+        amount: +quantity!,
+        moneyId: res.moneyId,
+      } );
+      
+      if (quantity != "0" && quantity != null && onboarding == "true") {
+        const form = {
+          date: new Date().toISOString(),
+          amount: +quantity,
+          moneyId: res.moneyId,
+        };
+        const response = await movementAddEarn(form);
+        console.log("RESPONSE ADD EARN QUNATITII: ", response);
+        
 
-    if (res.StatusCode === 401) {
-      alert(res.Message)
-      setLoading(false)
-      return;
+        await AsyncStorage.removeItem("quantity");
+      }
+      setUser(res);
+      setLoading(false);
+      router.replace("(tabs)");
     }
-
-    await AsyncStorage.setItem("auth", JSON.stringify(res));
-    setLoading(false)
-    router.replace("(tabs)");
   };
 
   return (
@@ -101,6 +139,9 @@ const Auth = () => {
             handleRegister={handleRegister}
             handleLogin={handleLogin}
             loading={loading}
+            setLoading={setLoading}
+            modalInfo={modalInfo}
+            setModalInfo={setModalInfo}
           />
         ) : (
           <View style={styles.authContain}>

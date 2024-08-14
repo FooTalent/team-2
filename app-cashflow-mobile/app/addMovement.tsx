@@ -26,34 +26,39 @@ import Expenses from "@/components/addMovement/Expenses";
 
 export default function AddMoney() {
   const [option, setOption] = useState<Boolean>(false);
-  
+
   // callbacks
-  
+
   const handleGoBack = () => {
     if (router.canGoBack()) {
       router.back();
     }
   };
   return (
-
-
-    <View style={{ flex: 1, marginHorizontal: 16, paddingVertical: 40, gap: 10 }}>
-      <ThemedView className="flex flex-row">
-        <TouchableOpacity onPress={handleGoBack}>
+    <View
+      style={{
+        flex: 1,
+        paddingHorizontal: 16,
+        paddingVertical: 40,
+        gap: 10,
+        backgroundColor: "#0A0219",
+      }}
+    >
+      <ThemedView className="flex gap-3 flex-row">
+        <TouchableOpacity
+          onPress={handleGoBack}
+          style={{ backgroundColor: "#290B57", borderRadius: 100 }}
+        >
           <MaterialIcons
             name="keyboard-arrow-left"
+            color="#7d32ec"
             size={44}
-            color="#3B1575"
             className="text-[24px]"
           />
         </TouchableOpacity>
-
-        <Image
-          style={{ width: 45.28, height: 45.28, borderRadius: 100 }}
-          source={{
-            uri: "https://reactnative.dev/img/tiny_logo.png",
-          }}
-        />
+        <Text className="text-neutralWhite font-headbold text-headxxl align-middle">
+          Agregar Movimiento
+        </Text>
       </ThemedView>
       <LinearGradient
         style={{
@@ -75,24 +80,24 @@ export default function AddMoney() {
           }}
         >
           <TouchableOpacity onPress={() => setOption(false)}>
-            <Text className=" py-[14px]   border-neutralWhite font-headsemibold text-headlg text-neutralWhite">
+            <Text
+              style={{ color: option === false ? "#7AED70" : "#838383" }}
+              className={` py-[14px] border-neutralWhite font-headsemibold text-headlg`}
+            >
               Ingresos
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setOption(true)}>
-            <Text className=" font-headsemibold text-headlg text-neutralWhite">
+            <Text
+              style={{ color: option === true ? "#7AED70" : "#838383" }}
+              className={` font-headsemibold text-headlg`}
+            >
               Gastos
             </Text>
           </TouchableOpacity>
         </View>
       </LinearGradient>
-      {!option ? (
-        <Earnings />
-      ) : (
-        <Expenses />
-      )}
-      
+      {option == false ? <Earnings /> : <Expenses />}
     </View>
-
   );
 }

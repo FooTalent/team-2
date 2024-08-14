@@ -76,11 +76,25 @@ export default function TabBar({ state, descriptors, navigation }: any) {
           >
             <View>
               {icons[route.name]({
-                color: isFocused ? "#110622" : "#ABFEBD",
+                color:
+                  isFocused
+                    ? "#110622"
+                    : "#ABFEBD",
+
                 marginHorizontal: "auto",
               })}
             </View>
-            <Text className="text-center" style={{color: isFocused ? "#110622": "#ABFEBD"}}>{label}</Text>
+            <Text
+              className="text-center"
+              style={{
+                color:
+                  isFocused
+                    ? "#110622"
+                    : "#ABFEBD",
+              }}
+            >
+              {label}
+            </Text>
           </TouchableOpacity>
         );
       })}
