@@ -55,6 +55,8 @@ namespace CashFlow.DataBase.Context
         public DbSet<MoneyEntity> Moneys => Set<MoneyEntity>();
 
         public DbSet<BudgetEntity> Budgets => Set<BudgetEntity>();
+        
+        public DbSet<IncomeEntity> Incomes => Set<IncomeEntity>();
 
         public DbSet<ExpenseEntity> Expenses => Set<ExpenseEntity>();
 
