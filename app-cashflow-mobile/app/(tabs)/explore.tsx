@@ -58,7 +58,8 @@ export default function TabTwoScreen() {
     >
       <ThemedView className="flex flex-row justify-between">
         <View className="  flex flex-row gap-[16px]">
-          <TouchableOpacity
+          {/* <TouchableOpacity
+          onPress={() => router.navigate("/index")}
             style={{ backgroundColor: "#290B57", borderRadius: 100 }}
           >
             <MaterialIcons
@@ -67,7 +68,7 @@ export default function TabTwoScreen() {
               size={44}
               className="text-[24px]"
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Text className="text-neutralWhite font-headbold text-headxxl align-middle">
             Presupuesto
           </Text>

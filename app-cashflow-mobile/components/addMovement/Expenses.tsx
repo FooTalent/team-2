@@ -58,9 +58,7 @@ export default function Expenses() {
         modal: true,
       });
       setLoading(false);
-      setTimeout(() => {
-        router.replace("(tabs)");
-      }, 2000);
+      router.replace("(tabs)");
     } else {
       if (response.StatusCode == 406) {
         setModalInfo({

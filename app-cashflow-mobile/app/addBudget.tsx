@@ -92,13 +92,11 @@ export default function AddBudget() {
         modal: true,
       });
       setLoading(false);
-      setTimeout(() => {
-        router.replace("(tabs)");
-      }, 2000);
+      router.replace("(tabs)");
     } else {
       setModalInfo({
         head: "Error al agregar presupuesto",
-        p: "Ha ocurrido un error al agregar el presupuesto",
+        p: "Ha ocurrido un error al agregar el presupuesto, el dinero es superior al disponible o el presupuesto con esa categoria ya existe",
         err: true,
         modal: true,
       });
@@ -162,6 +160,7 @@ export default function AddBudget() {
             Dinero del presupuesto
           </Text>
           <TextInput
+            returnKeyType="done"
             keyboardType="numeric"
             onChangeText={(text) =>
               setFormNewBudget({ ...formNewBudget, amount: +text })
@@ -171,7 +170,7 @@ export default function AddBudget() {
           />
         </View>
         <View>
-          <Text className="text-neutralWhite text-headlg mb-3">Categoria</Text>
+          <Text className="text-neutralWhite text-headlg mb-3">Categoria (Diferente a la categoria "Otros" )</Text>
           <SelectDropdown
             data={categories}
             onSelect={(selectedItem, index) => {

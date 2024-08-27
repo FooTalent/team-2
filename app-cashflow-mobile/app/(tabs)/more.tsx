@@ -31,7 +31,7 @@ const More = () => {
       <View style={{ gap: 10 }}>
         <ThemedView className="flex flex-row justify-between">
           <View className="  flex flex-row gap-[16px]">
-            <TouchableOpacity
+         {/*    <TouchableOpacity
               style={{ backgroundColor: "#290B57", borderRadius: 100 }}
             >
               <MaterialIcons
@@ -40,8 +40,8 @@ const More = () => {
                 size={44}
                 className="text-[24px]"
               />
-            </TouchableOpacity>
-            <Text className="text-neutralWhite font-headbold text-headxxl align-middle">
+            </TouchableOpacity> */}
+            <Text className="text-neutralWhite ml-2 font-headbold text-headxxl align-middle">
               Más
             </Text>
           </View>
