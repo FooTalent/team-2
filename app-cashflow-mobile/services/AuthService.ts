@@ -12,6 +12,8 @@ export class AuthService {
     }
 
     async login(data: LoginUserDto) {
+        console.log("LOGIN USER: ", data);
+        
         const response = await axios.post(`${this.BASE_URL}${pathsUrl.login_user}`, data)
         return response.data;
     }

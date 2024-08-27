@@ -63,7 +63,7 @@ export default function Expenses() {
       if (response.StatusCode == 406) {
         setModalInfo({
           head: "Ha ocurrido un error",
-          p: response.Message,
+          p: response.Message == "El dinero disponible en Trabajo no es suficiente" ? "El dinero disponible en el Presupuesto Trabajo no es suficiente" : "El dinero disponible no es suficiente",
           err: true,
           modal: true,
         });
