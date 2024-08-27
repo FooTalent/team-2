@@ -26,10 +26,11 @@ namespace CashFlow.Modules.Movements
                 expenseDTO.BudgetId = budgetExist.Id;
                 if (budgetExist.Amount < expenseDTO.Amount)
                 {
-                    decimal value = expenseDTO.Amount - budgetExist.Amount;
+                 /*   decimal value = expenseDTO.Amount - budgetExist.Amount;
                     money.DecreaseRest(value);
 
-                    budgetExist.Amount = 0;
+                    budgetExist.Amount = 0;*/
+                 throw new CustomException(HttpStatusCode.NotAcceptable, $"El dinero disponible en {budgetExist.CategoryName} no es suficiente");
                 }
                 else
                 {
